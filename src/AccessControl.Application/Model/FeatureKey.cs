@@ -1,5 +1,8 @@
+using AccessControl.Application.Abstractions;
+
 namespace AccessControl.Application.Model;
-public class FeatureKey
+
+public class FeatureKey : IResource
 {
     public Guid Id { get; set; }
 

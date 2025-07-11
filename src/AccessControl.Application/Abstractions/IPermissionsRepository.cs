@@ -4,7 +4,7 @@ namespace AccessControl.Application.Abstractions;
 
 public interface IPermissionsRepository
 {
-    public Task<PermissionsEntry[]> Load();
+    public PermissionsEntry[] GetAll();
 
-    public Task Save(PermissionsEntry[] entries);
+    public void Save(PermissionsEntry[] entries);
 }
