@@ -2,12 +2,24 @@
 
 ## Resources
 
-- [Resource-based authorization in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-9.0)
-- [Policy-based authorization in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-9.0)
-
 - [Resource Based Access Control vs Role Based Access Control](https://stackoverflow.com/questions/18435219/resource-based-access-control-vs-role-based-access-control)
 - [Подходы к контролю доступа: RBAC vs. ABAC](https://habr.com/ru/companies/custis/articles/248649/)
 - [Authorization Services Guide](https://www.keycloak.org/docs/latest/authorization_services/index.html)
+
+## ASP.NET
+
+- [Resource-based authorization in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-9.0)
+- [Policy-based authorization in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-9.0)
+- [Implement Custom Authorization Policy Provider in ASP.NET Core](https://code-maze.com/aspnetcore-implement-custom-authorization-policy-provider-in-asp-net-core/)
+- [Creating Custom Authorization Policy Provider In ASP.NET Core](https://www.c-sharpcorner.com/article/creating-custom-authorization-policy-provider-in-asp-net-code/)
+- [Nice to knows when implementing policy-based authorization in .NET](https://timdeschryver.dev/blog/nice-to-knows-when-implementing-policy-based-authorization-in-net)
+
+## Duende
+
+- [Authorization Policy TagHelpers for ASP.NET](https://duendesoftware.com/blog/20250422-authorization-policy-tag-helper-aspnetcore-razor-view)
+- [Access Token Management](https://github.com/DuendeSoftware/foss/tree/main/access-token-management)
+- [Session Management](https://duendesoftware.com/blog/20220406-session-management)
+- [foss](https://github.com/DuendeSoftware/foss/tree/main)
 
 
 ## Code
@@ -17,6 +29,7 @@
 - [FullStackHero .NET 9 Starter Kit](https://github.com/fullstackhero/dotnet-starter-kit)
 
 ##  Casbin
+
 - [casbin](https://github.com/casbin/casbin)
 - [Casbin.NET](https://github.com/casbin/Casbin.NET)
 
