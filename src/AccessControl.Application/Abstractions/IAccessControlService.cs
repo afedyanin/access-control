@@ -1,7 +1,7 @@
-using AccessControl.Application.Model;
+using AccessControl.Model;
 
 namespace AccessControl.Application.Abstractions;
 public interface IAccessControlService
 {
-    public Permissions GetPermissions(string resource, string[] roles);
+    public AccessPermissions GetPermissions(string resource, string[] roles);
 }

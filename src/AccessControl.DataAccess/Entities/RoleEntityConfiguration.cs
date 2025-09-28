@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal class RoleEntityConfiguration : IEntityTypeConfiguration<AccessRole>
+internal sealed class RoleEntityConfiguration : IEntityTypeConfiguration<AccessRole>
 {
     public void Configure(EntityTypeBuilder<AccessRole> builder)
     {

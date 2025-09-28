@@ -1,10 +1,16 @@
 using AccessControl.Application.Abstractions;
-using AccessControl.Application.Model;
+using AccessControl.Model;
 
 namespace AccessControl.Application.Services;
 
 internal class AccessControlService : IAccessControlService
 {
+    public AccessPermissions GetPermissions(string resource, string[] roles)
+    {
+        throw new NotImplementedException();
+    }
+
+    /*
     private readonly Dictionary<string, Dictionary<string, Permissions>> _permissions = [];
 
     public AccessControlService(IPermissionsRepository permissionsRepository)
@@ -57,4 +63,5 @@ internal class AccessControlService : IAccessControlService
 
         return res;
     }
+    */
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<FeatureKey>
+internal sealed class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<FeatureKey>
 {
     public void Configure(EntityTypeBuilder<FeatureKey> builder)
     {
