@@ -1,6 +1,6 @@
-namespace AccessControl.Application.Model;
+namespace AccessControl.Model;
 
-public class Role
+public class AccessRole
 {
     public Guid Id { get; set; }
 
