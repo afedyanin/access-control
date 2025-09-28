@@ -1,7 +1,7 @@
 namespace AccessControl.Model;
 
 [Flags]
-public enum AccessPermissions
+public enum Permissions
 {
     None = 0,
     Read = 1,

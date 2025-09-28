@@ -22,8 +22,4 @@
     <ProjectReference Include="..\AccessControl.Model\AccessControl.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

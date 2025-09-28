@@ -5,7 +5,7 @@ namespace AccessControl.Application.Services;
 
 internal class AccessControlService : IAccessControlService
 {
-    public AccessPermissions GetPermissions(string resource, string[] roles)
+    public Permissions GetPermissions(string resource, string[] roles)
     {
         throw new NotImplementedException();
     }

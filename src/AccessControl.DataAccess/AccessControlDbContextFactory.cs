@@ -6,7 +6,7 @@ namespace AccessControl.DataAccess;
 
 public class AccessControlDbContextFactory : IDesignTimeDbContextFactory<AccessControlDbContext>
 {
-    private static readonly string LocalConnection = "Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=AccessControl;";
+    private static readonly string LocalConnection = "Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=access_control;";
 
     public AccessControlDbContext CreateDbContext(string[] args)
     {
