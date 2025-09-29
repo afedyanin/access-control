@@ -21,7 +21,6 @@ internal sealed class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<F
             .HasColumnName("name")
             .IsRequired();
 
-        // https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many#many-to-many-and-join-table-with-payload
         builder.HasMany(e => e.AccessRoles)
             .WithMany()
             .UsingEntity<FeatureKeyAccessRole>(

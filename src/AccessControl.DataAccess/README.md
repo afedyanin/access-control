@@ -21,4 +21,4 @@ dotnet ef database update --context AccessControlDbContext
 ## Resources
 
 - [Отношение многие ко многим](https://metanit.com/sharp/efcore/3.6.php)
-- 
+- [Many-to-many and join table with payload](https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many#many-to-many-and-join-table-with-payload)
