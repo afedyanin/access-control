@@ -1,6 +1,6 @@
 namespace AccessControl.Model.Repositories;
 
-public interface IAccessRolesRepository
+public interface IAccessRoleRepository
 {
     public Task<AccessRole[]> GetAll();
 

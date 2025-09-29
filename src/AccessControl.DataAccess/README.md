@@ -17,3 +17,8 @@ dotnet ef migrations add AccessControlTables --context AccessControlDbContext
 ```shell
 dotnet ef database update --context AccessControlDbContext
 ```
+
+## Resources
+
+- [Отношение многие ко многим](https://metanit.com/sharp/efcore/3.6.php)
+- 

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
 
-internal class AccessRolesRepository : RepositoryBase, IAccessRolesRepository
+internal class AccessRoleRepository : RepositoryBase, IAccessRoleRepository
 {
-    public AccessRolesRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)
+    public AccessRoleRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)
     {
     }
 

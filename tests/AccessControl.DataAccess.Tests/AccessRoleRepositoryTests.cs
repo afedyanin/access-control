@@ -3,7 +3,7 @@ using AccessControl.Model;
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-public class AccessRolesRepositoryTests : RepositoryTestBase
+public class AccessRoleRepositoryTests : RepositoryTestBase
 {
     [Test]
     public async Task CanSaveRole()
@@ -15,7 +15,7 @@ public class AccessRolesRepositoryTests : RepositoryTestBase
             Description = "Test description"
         };
 
-        var saved = await AccessRolesRepo.Save(role);
+        var saved = await AccessRoleRepository.Save(role);
         Assert.That(saved, Is.True);
     }
 
@@ -28,8 +28,8 @@ public class AccessRolesRepositoryTests : RepositoryTestBase
             Name = "Some Role 2",
         };
 
-        var saved = await AccessRolesRepo.Save(role);
-        var found = await AccessRolesRepo.GetById(role.Id);
+        var saved = await AccessRoleRepository.Save(role);
+        var found = await AccessRoleRepository.GetById(role.Id);
 
         Assert.That(found, Is.Not.Null);
         Assert.Multiple(() =>
@@ -42,7 +42,7 @@ public class AccessRolesRepositoryTests : RepositoryTestBase
     [Test]
     public async Task CanGetAllRoles()
     {
-        var roles = await AccessRolesRepo.GetAll();
+        var roles = await AccessRoleRepository.GetAll();
         Assert.That(roles, Is.Not.Null);
     }
 
@@ -55,12 +55,12 @@ public class AccessRolesRepositoryTests : RepositoryTestBase
             Name = "Some Role to delete",
         };
 
-        var saved = await AccessRolesRepo.Save(role);
-        var deleted = await AccessRolesRepo.Delete(role.Id);
+        var saved = await AccessRoleRepository.Save(role);
+        var deleted = await AccessRoleRepository.Delete(role.Id);
 
         Assert.That(deleted, Is.GreaterThan(0));
 
-        var found = await AccessRolesRepo.GetById(role.Id);
+        var found = await AccessRoleRepository.GetById(role.Id);
         Assert.That(found, Is.Null);
     }
 }
