@@ -1,4 +1,4 @@
-using AccessControl.Model;
+using AccessControl.Contracts;
 
 namespace AccessControl.Application.Abstractions;
 public interface IAccessControlService

@@ -1,3 +1,4 @@
+using AccessControl.Contracts;
 using AccessControl.Model;
 
 namespace AccessControl.DataAccess.Tests;

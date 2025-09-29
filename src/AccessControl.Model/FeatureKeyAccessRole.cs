@@ -1,3 +1,5 @@
+using AccessControl.Contracts;
+
 namespace AccessControl.Model;
 
 public class FeatureKeyAccessRole

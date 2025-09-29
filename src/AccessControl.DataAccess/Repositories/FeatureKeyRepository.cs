@@ -39,8 +39,8 @@ internal class FeatureKeyRepository : RepositoryBase, IFeatureKeyRepository
         if (existing != null)
         {
             existing.Name = featureKey.Name;
-            existing.AccessRoles.Clear();
 
+            existing.AccessRoles.Clear();
             foreach (var role in featureKey.AccessRoles)
             {
                 existing.AccessRoles.Add(role);

@@ -1,5 +1,5 @@
 using AccessControl.Application.Abstractions;
-using AccessControl.Model;
+using AccessControl.Contracts;
 
 namespace AccessControl.Application.Services;
 
