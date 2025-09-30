@@ -108,6 +108,9 @@ Context Handler: Executes the workflow logic that defines the order in which pol
 
 - 
 
+79108306	0 -> 1	VTBRM	Cash	RU_Kondor_IB_FX	8,721,517
+78665546	0 -> 1	VTBRM	Cash	RU_Kondor_IB_FX	8,253,045
+78841829	1 -> 2	VTBRM	Cash	RU_Kondor_IB_FX	8,531,589
 
 
 
