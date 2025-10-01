@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using AccessControl.WebApi;
+using AccessControl.DataAccess;
 
 namespace AccessControl.Server;
 
@@ -7,16 +10,21 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+            .AddApplicationPart(typeof(FeatureKeysController).Assembly);
 
-        builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        var configuration = builder.Configuration;
+        var connectionString = configuration.GetConnectionString("AccessControlDbConnection");
+
+        builder.Services.AddAccessCotrolDataAccess(connectionString!);
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -26,7 +34,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

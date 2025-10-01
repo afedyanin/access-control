@@ -16,25 +16,31 @@ public class PermissionsController : ControllerBase
         _featureKeyRepository = featureKeyRepository;
     }
 
-    [HttpGet("featute-key/{fkey}")]
-    public async Task<IActionResult> GetEffectivePermissions(string fkey, string[] roles)
+    [HttpGet("featute-key/{fkName}")]
+    public async Task<IActionResult> GetEffectivePermissions(string fkName, string[] roleNames)
     {
-        // get fk by name
+        var found = await _featureKeyRepository.GetByName(fkName);
+
+        if (found == null)
+        {
+            return NotFound();
+        }
+
         // get roles by names
         // match roles with fk collection FeatureKeyAccessRoles
         return Ok(Permissions.None);
     }
 
-    [HttpPut("{fkey}")]
-    public async Task<IActionResult> UpdatePermissions(string fkey, [FromBody] PermissionsRequest request)
+    [HttpPut("featute-key/{fkName}")]
+    public async Task<IActionResult> UpdatePermissions(string fkName, [FromBody] PermissionsRequest request)
     {
-        //var found = await _featureKeyRepository.GetByName(id);
-/*
+        var found = await _featureKeyRepository.GetByName(fkName);
+
         if (found == null)
         {
             return NotFound();
         }
-*/
+
         // TODO: Update permissions here
 
         return Ok();

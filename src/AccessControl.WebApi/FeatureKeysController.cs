@@ -1,6 +1,7 @@
 using AccessControl.Contracts.Requests;
 using AccessControl.Model;
 using AccessControl.Model.Repositories;
+using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
@@ -21,69 +22,44 @@ public class FeatureKeysController : ControllerBase
     {
         var featureKeys = await _featureKeyRepository.GetAll();
 
-        // TODO: convert to DTO: hide collections & use RolePermissions
-        return Ok(featureKeys);
+        return Ok(featureKeys.ToDto());
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    [HttpGet("{name}")]
+    public async Task<IActionResult> GetByName(string name)
     {
-        var fk = await _featureKeyRepository.GetById(id);
+        var featureKey = await _featureKeyRepository.GetByName(name);
 
-        if (fk == null)
+        if (featureKey == null)
         {
             return NotFound();
         }
 
-        // TODO: convert to DTO: hide collections & use RolePermissions
-        return Ok(fk);
+        return Ok(featureKey.ToDto());
     }
 
     [HttpPost()]
     public async Task<IActionResult> Create([FromBody] FeatureKeyRequest request)
     {
-        var role = new FeatureKey
+        var featureKey = new FeatureKey
         {
-            Id = Guid.NewGuid(),
             Name = request.Name,
         };
 
-        var saved = await _featureKeyRepository.Save(role);
+        var saved = await _featureKeyRepository.Save(featureKey);
 
         if (!saved)
         {
             return BadRequest();
         }
 
-        return Ok(role.Id);
+        return Ok(featureKey.ToDto());
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] FeatureKeyRequest request)
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> Delete(string name)
     {
-        var found = await _featureKeyRepository.GetById(id);
-
-        if (found == null)
-        {
-            return NotFound();
-        }
-
-        found.Name = request.Name;
-
-        var saved = await _featureKeyRepository.Save(found);
-
-        if (!saved)
-        {
-            return BadRequest();
-        }
-
-        return Ok();
-    }
-
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        var deletedCount = await _featureKeyRepository.Delete(id);
-        return Ok();
+        var deletedCount = await _featureKeyRepository.Delete(name);
+        return Ok(deletedCount);
     }
 }

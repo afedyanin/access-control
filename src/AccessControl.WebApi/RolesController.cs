@@ -22,10 +22,10 @@ public class RolesController : ControllerBase
         return Ok(roles);
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    [HttpGet("{name}")]
+    public async Task<IActionResult> GetByName(string name)
     {
-        var role = await _roleRepository.GetById(id);
+        var role = await _roleRepository.GetByName(name);
 
         if (role == null)
         {
@@ -40,7 +40,6 @@ public class RolesController : ControllerBase
     {
         var role = new Role
         {
-            Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
         };
@@ -52,20 +51,19 @@ public class RolesController : ControllerBase
             return BadRequest();
         }
 
-        return Ok(role.Id);
+        return Ok(role);
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] RoleRequest request)
+    [HttpPut()]
+    public async Task<IActionResult> Update([FromBody] RoleRequest request)
     {
-        var found = await _roleRepository.GetById(id);
+        var found = await _roleRepository.GetByName(request.Name);
 
         if (found == null)
         {
             return NotFound();
         }
 
-        found.Name = request.Name;
         found.Description = request.Description;
 
         var saved = await _roleRepository.Save(found);
@@ -75,14 +73,14 @@ public class RolesController : ControllerBase
             return BadRequest();
         }
 
-        return Ok();
+        return Ok(found);
     }
 
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> Delete(string name)
     {
-        var deletedCount = await _roleRepository.Delete(id);
-        return Ok();
+        var deletedCount = await _roleRepository.Delete(name);
+        return Ok(deletedCount);
     }
 }

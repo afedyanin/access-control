@@ -1,3 +1,4 @@
+using System.Data;
 using AccessControl.Model;
 using AccessControl.Model.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
 
         return await context
             .FeatureKeys
+            .Include(fk => fk.FeatureKeyRoles)
             .OrderBy(x => x.Name)
             .ToArrayAsync();
     }
@@ -25,6 +27,7 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
 
         return await context
             .FeatureKeys
+            .Include(fk => fk.FeatureKeyRoles)
             .SingleOrDefaultAsync(x => x.Name == name);
     }
 
@@ -38,9 +41,17 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
 
         if (existing != null)
         {
+            existing.Roles.Clear();
+            foreach (var role in featureKey.Roles)
+            {
+                context.Attach(role);
+                existing.Roles.Add(role);
+            }
+
             existing.FeatureKeyRoles.Clear();
             foreach (var fkRole in featureKey.FeatureKeyRoles)
             {
+                context.Attach(fkRole.Role);
                 existing.FeatureKeyRoles.Add(fkRole);
             }
         }
