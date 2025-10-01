@@ -29,6 +29,16 @@ internal class RolesRepository : RepositoryBase, IRolesRepository
             .SingleOrDefaultAsync(x => x.Name == name);
     }
 
+    public async Task<Role[]> GetByNames(string[] roleNames)
+    {
+        using var context = await GetDbContext();
+
+        return await context
+            .Roles
+            .Where(r => roleNames.Contains(r.Name))
+            .ToArrayAsync();
+    }
+
     public async Task<bool> Save(Role role)
     {
         using var context = await GetDbContext();

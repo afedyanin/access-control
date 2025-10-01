@@ -1,7 +1,10 @@
 using AccessControl.Contracts;
 using AccessControl.Contracts.Requests;
+using AccessControl.Model;
 using AccessControl.Model.Repositories;
+using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace AccessControl.WebApi;
 
@@ -11,39 +14,127 @@ namespace AccessControl.WebApi;
 public class PermissionsController : ControllerBase
 {
     private readonly IFeatureKeysRepository _featureKeyRepository;
-    public PermissionsController(IFeatureKeysRepository featureKeyRepository)
+    private readonly IRolesRepository _rolesRepository;
+    private readonly ILogger<PermissionsController> _logger;
+
+    public PermissionsController(
+        IFeatureKeysRepository featureKeyRepository,
+        IRolesRepository rolesRepository,
+        ILogger<PermissionsController> logger)
     {
         _featureKeyRepository = featureKeyRepository;
+        _rolesRepository = rolesRepository;
+        _logger = logger;
     }
 
     [HttpGet("featute-key/{fkName}")]
-    public async Task<IActionResult> GetEffectivePermissions(string fkName, string[] roleNames)
+    public async Task<IActionResult> GetEffectivePermissions(string fkName, [FromQuery] string[] roleNames)
     {
-        var found = await _featureKeyRepository.GetByName(fkName);
+        var featureKey = await _featureKeyRepository.GetByName(fkName);
 
-        if (found == null)
+        if (featureKey == null)
         {
             return NotFound();
         }
 
-        // get roles by names
-        // match roles with fk collection FeatureKeyAccessRoles
-        return Ok(Permissions.None);
+        var dict = featureKey.FeatureKeyRoles.ToDictionary(fkr => fkr.RoleName);
+
+        var effective = Permissions.None;
+
+        foreach (var roleName in roleNames)
+        {
+            if (dict.TryGetValue(roleName, out var fkRole))
+            {
+                effective |= fkRole.Permissions;
+            }
+        }
+
+        return Ok(effective);
     }
 
-    [HttpPut("featute-key/{fkName}")]
-    public async Task<IActionResult> UpdatePermissions(string fkName, [FromBody] PermissionsRequest request)
+    [HttpPost("featute-key/{fkName}")]
+    public async Task<IActionResult> CreatePermissions(string fkName, [FromBody] PermissionsRequest request)
     {
-        var found = await _featureKeyRepository.GetByName(fkName);
+        var featureKey = await _featureKeyRepository.GetByName(fkName);
 
-        if (found == null)
+        if (featureKey == null)
         {
             return NotFound();
         }
 
-        // TODO: Update permissions here
+        var dict = request.Permissions.ToDictionary(rp => rp.RoleName);
+        var roles = await _rolesRepository.GetByNames([.. dict.Keys]);
 
-        return Ok();
+        featureKey.FeatureKeyRoles.Clear();
+
+        foreach (var role in roles)
+        {
+            var fkr = new FeatureKeyRole
+            {
+                FeatureKey = featureKey,
+                Role = role,
+                Permissions = dict[role.Name].Permissions,
+            };
+
+            featureKey.FeatureKeyRoles.Add(fkr);
+        }
+
+        var saved = await _featureKeyRepository.Save(featureKey);
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save permissions for FeatureKey={fkName}");
+        }
+
+        return Ok(featureKey.ToDto());
     }
 
+    [HttpPut("featute-key/{fkName}/role/{roleName}/{permissions}")]
+    public async Task<IActionResult> UpdatePermissions(string fkName, string roleName, Permissions permissions)
+    {
+        var featureKey = await _featureKeyRepository.GetByName(fkName);
+
+        if (featureKey == null)
+        {
+            _logger.LogError($"Feature key with name={fkName} is not found.");
+            return NotFound();
+        }
+
+        var role = await _rolesRepository.GetByName(roleName);
+
+        if (role == null)
+        {
+            _logger.LogError($"Role with name={roleName} is not found.");
+            return NotFound();
+        }
+
+        var fkRole = featureKey.FeatureKeyRoles.FirstOrDefault(fkr => fkr.RoleName == role.Name);
+
+        if (fkRole == null)
+        {
+            fkRole = new FeatureKeyRole
+            {
+                FeatureKey = featureKey,
+                Role = role,
+                Permissions = permissions,
+            };
+
+            featureKey.FeatureKeyRoles.Add(fkRole);
+        }
+        else
+        {
+            fkRole.Permissions = permissions;
+        }
+
+        var saved = await _featureKeyRepository.Save(featureKey);
+
+        if (!saved)
+        {
+            var message = $"Cannot update permissions for FeatureKey={fkName} and Role={roleName}";
+            _logger.LogError(message);
+            return BadRequest(message);
+        }
+
+        return Ok(featureKey.ToDto());
+    }
 }
