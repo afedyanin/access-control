@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using AccessControl.Contracts;
 using AccessControl.Contracts.Requests;
 using AccessControl.Model;
@@ -25,6 +26,35 @@ public class PermissionsController : ControllerBase
         _featureKeyRepository = featureKeyRepository;
         _rolesRepository = rolesRepository;
         _logger = logger;
+    }
+
+    // TODO: Test it
+    [HttpGet("all-featute-keys")]
+    public async Task<IActionResult> GetAllFeatureKeysPermissions([FromQuery] string[] roleNames)
+    {
+        var featureKeys = await _featureKeyRepository.GetAll();
+
+        var res = new Dictionary<string, Permissions>();
+
+        foreach (var featureKey in featureKeys)
+        {
+            // TODO: Extract method
+            var effective = Permissions.None;
+
+            var dict = featureKey.FeatureKeyRoles.ToDictionary(fkr => fkr.RoleName);
+
+            foreach (var roleName in roleNames)
+            {
+                if (dict.TryGetValue(roleName, out var fkRole))
+                {
+                    effective |= fkRole.Permissions;
+                }
+            }
+
+            res[featureKey.Name] = effective;
+        }
+
+        return Ok(res);
     }
 
     [HttpGet("featute-key/{fkName}")]
