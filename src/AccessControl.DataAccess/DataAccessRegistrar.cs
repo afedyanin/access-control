@@ -11,8 +11,8 @@ public static class DataAccessRegistrar
     {
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<AccessControlDbContext>(options => options.UseNpgsql(connectionString));
-        services.AddSingleton<IAccessRoleRepository, AccessRoleRepository>();
-        services.AddSingleton<IFeatureKeyRepository, FeatureKeyRepository>();
+        services.AddSingleton<IRolesRepository, RolesRepository>();
+        services.AddSingleton<IFeatureKeysRepository, FeatureKeysRepository>();
 
         return services;
     }

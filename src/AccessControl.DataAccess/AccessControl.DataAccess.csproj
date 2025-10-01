@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AccessControl.Model\AccessControl.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

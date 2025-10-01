@@ -3,9 +3,9 @@ using AccessControl.Model.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
-internal class FeatureKeyRepository : RepositoryBase, IFeatureKeyRepository
+internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
 {
-    public FeatureKeyRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)
+    public FeatureKeysRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)
     {
     }
 
@@ -19,13 +19,13 @@ internal class FeatureKeyRepository : RepositoryBase, IFeatureKeyRepository
             .ToArrayAsync();
     }
 
-    public async Task<FeatureKey?> GetById(Guid id)
+    public async Task<FeatureKey?> GetByName(string name)
     {
         using var context = await GetDbContext();
 
         return await context
             .FeatureKeys
-            .SingleOrDefaultAsync(x => x.Id == id);
+            .SingleOrDefaultAsync(x => x.Name == name);
     }
 
     public async Task<bool> Save(FeatureKey featureKey)
@@ -34,22 +34,14 @@ internal class FeatureKeyRepository : RepositoryBase, IFeatureKeyRepository
 
         var existing = await context
             .FeatureKeys
-            .FirstOrDefaultAsync(p => p.Id == featureKey.Id);
+            .FirstOrDefaultAsync(p => p.Name == featureKey.Name);
 
         if (existing != null)
         {
-            existing.Name = featureKey.Name;
-
-            existing.AccessRoles.Clear();
-            foreach (var role in featureKey.AccessRoles)
+            existing.FeatureKeyRoles.Clear();
+            foreach (var fkRole in featureKey.FeatureKeyRoles)
             {
-                existing.AccessRoles.Add(role);
-            }
-
-            existing.FeatureKeyAccessRoles.Clear();
-            foreach (var fkRole in featureKey.FeatureKeyAccessRoles)
-            {
-                existing.FeatureKeyAccessRoles.Add(fkRole);
+                existing.FeatureKeyRoles.Add(fkRole);
             }
         }
         else
@@ -62,12 +54,12 @@ internal class FeatureKeyRepository : RepositoryBase, IFeatureKeyRepository
         return savedRecords > 0;
     }
 
-    public async Task<int> Delete(Guid id)
+    public async Task<int> Delete(string name)
     {
         using var context = await GetDbContext();
 
         return await context.FeatureKeys
-            .Where(s => s.Id == id)
+            .Where(s => s.Name == name)
             .ExecuteDeleteAsync();
     }
 }

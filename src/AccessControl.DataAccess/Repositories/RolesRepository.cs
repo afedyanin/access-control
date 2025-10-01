@@ -4,47 +4,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
 
-internal class AccessRoleRepository : RepositoryBase, IAccessRoleRepository
+internal class RolesRepository : RepositoryBase, IRolesRepository
 {
-    public AccessRoleRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)
+    public RolesRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)
     {
     }
 
-    public async Task<AccessRole[]> GetAll()
+    public async Task<Role[]> GetAll()
     {
         using var context = await GetDbContext();
 
         return await context
-            .AccesRoles
+            .Roles
             .OrderBy(x => x.Name)
             .ToArrayAsync();
     }
 
-    public async Task<AccessRole?> GetById(Guid id)
+    public async Task<Role?> GetByName(string name)
     {
         using var context = await GetDbContext();
 
         return await context
-            .AccesRoles
-            .SingleOrDefaultAsync(x => x.Id == id);
+            .Roles
+            .SingleOrDefaultAsync(x => x.Name == name);
     }
 
-    public async Task<bool> Save(AccessRole role)
+    public async Task<bool> Save(Role role)
     {
         using var context = await GetDbContext();
 
         var existing = await context
-            .AccesRoles
-            .FirstOrDefaultAsync(p => p.Id == role.Id);
+            .Roles
+            .FirstOrDefaultAsync(p => p.Name == role.Name);
 
         if (existing != null)
         {
-            existing.Name = role.Name;
             existing.Description = role.Description;
         }
         else
         {
-            context.AccesRoles.Add(role);
+            context.Roles.Add(role);
         }
 
         var savedRecords = await context.SaveChangesAsync();
@@ -52,12 +51,12 @@ internal class AccessRoleRepository : RepositoryBase, IAccessRoleRepository
         return savedRecords > 0;
     }
 
-    public async Task<int> Delete(Guid id)
+    public async Task<int> Delete(string name)
     {
         using var context = await GetDbContext();
 
-        return await context.AccesRoles
-            .Where(s => s.Id == id)
+        return await context.Roles
+            .Where(s => s.Name == name)
             .ExecuteDeleteAsync();
     }
 }

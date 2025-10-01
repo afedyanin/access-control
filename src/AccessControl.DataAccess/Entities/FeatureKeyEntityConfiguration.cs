@@ -10,26 +10,22 @@ internal sealed class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<F
     {
         builder.ToTable("feature_keys");
 
-        builder.HasKey(e => e.Id)
+        builder.HasKey(e => e.Name)
             .HasName("feature_keys_pkey");
-
-        builder.Property(e => e.Id)
-            .HasColumnName("id")
-            .IsRequired();
 
         builder.Property(e => e.Name)
             .HasColumnName("name")
             .IsRequired();
 
-        builder.HasMany(e => e.AccessRoles)
+        builder.HasMany(e => e.Roles)
             .WithMany()
-            .UsingEntity<FeatureKeyAccessRole>(
+            .UsingEntity<FeatureKeyRole>(
                 j =>
                 {
                     j.ToTable("feature_key_role");
                     j.Property(e => e.Permissions).HasColumnName("permissions");
-                    j.Property(e => e.FeatureKeyId).HasColumnName("feature_key_id");
-                    j.Property(e => e.AccessRoleId).HasColumnName("access_role_id");
+                    j.Property(e => e.FeatureKeyName).HasColumnName("feature_key_name");
+                    j.Property(e => e.RoleName).HasColumnName("role_name");
                 });
     }
 }

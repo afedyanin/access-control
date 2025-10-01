@@ -4,18 +4,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal sealed class RoleEntityConfiguration : IEntityTypeConfiguration<AccessRole>
+internal sealed class RoleEntityConfiguration : IEntityTypeConfiguration<Role>
 {
-    public void Configure(EntityTypeBuilder<AccessRole> builder)
+    public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable("access_roles");
+        builder.ToTable("roles");
 
-        builder.HasKey(e => e.Id)
-            .HasName("access_roles_pkey");
-
-        builder.Property(e => e.Id)
-            .HasColumnName("id")
-            .IsRequired();
+        builder.HasKey(e => e.Name)
+            .HasName("roles_pkey");
 
         builder.Property(e => e.Name)
             .HasColumnName("name")

@@ -8,7 +8,7 @@ public class AccessControlDbContext : DbContext
 {
     public DbSet<FeatureKey> FeatureKeys { get; set; }
 
-    public DbSet<AccessRole> AccesRoles { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
 
     public AccessControlDbContext(DbContextOptions<AccessControlDbContext> options) : base(options)
@@ -18,7 +18,7 @@ public class AccessControlDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         new FeatureKeyEntityConfiguration().Configure(modelBuilder.Entity<FeatureKey>());
-        new RoleEntityConfiguration().Configure(modelBuilder.Entity<AccessRole>());
+        new RoleEntityConfiguration().Configure(modelBuilder.Entity<Role>());
     }
 
 }

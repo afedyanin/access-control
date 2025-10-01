@@ -9,8 +9,8 @@ namespace AccessControl.WebApi;
 [ApiController]
 public class RolesController : ControllerBase
 {
-    private readonly IAccessRoleRepository _roleRepository;
-    public RolesController(IAccessRoleRepository roleRepository)
+    private readonly IRolesRepository _roleRepository;
+    public RolesController(IRolesRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }
@@ -38,7 +38,7 @@ public class RolesController : ControllerBase
     [HttpPost()]
     public async Task<IActionResult> Create([FromBody] RoleRequest request)
     {
-        var role = new AccessRole
+        var role = new Role
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
