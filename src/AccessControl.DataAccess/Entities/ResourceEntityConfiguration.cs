@@ -28,7 +28,7 @@ internal sealed class ResourceEntityConfiguration : IEntityTypeConfiguration<Res
                 {
                     j.ToTable("resource_role");
                     j.Property(e => e.Permissions).HasColumnName("permissions");
-                    j.Property(e => e.Resource).HasColumnName("resource_id");
+                    j.Property(e => e.ResourceId).HasColumnName("resource_id");
                     j.Property(e => e.RoleName).HasColumnName("role_name");
                 });
     }
