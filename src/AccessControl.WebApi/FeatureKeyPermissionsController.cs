@@ -8,26 +8,26 @@ using Microsoft.Extensions.Logging;
 
 namespace AccessControl.WebApi;
 
-[Route("api/permissions")]
+[Route("api/feature-key-permissions")]
 [ApiController]
 
-public class PermissionsController : ControllerBase
+public class FeatureKeyPermissionsController : ControllerBase
 {
     private readonly IFeatureKeysRepository _featureKeyRepository;
     private readonly IRolesRepository _rolesRepository;
-    private readonly ILogger<PermissionsController> _logger;
+    private readonly ILogger<FeatureKeyPermissionsController> _logger;
 
-    public PermissionsController(
+    public FeatureKeyPermissionsController(
         IFeatureKeysRepository featureKeyRepository,
         IRolesRepository rolesRepository,
-        ILogger<PermissionsController> logger)
+        ILogger<FeatureKeyPermissionsController> logger)
     {
         _featureKeyRepository = featureKeyRepository;
         _rolesRepository = rolesRepository;
         _logger = logger;
     }
 
-    [HttpGet("all-featute-keys")]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAllFeatureKeysPermissions([FromQuery] string[] roleNames)
     {
         var featureKeys = await _featureKeyRepository.GetAll();
@@ -42,7 +42,7 @@ public class PermissionsController : ControllerBase
         return Ok(res);
     }
 
-    [HttpGet("featute-key/{fkName}")]
+    [HttpGet("{fkName}")]
     public async Task<IActionResult> GetEffectivePermissions(string fkName, [FromQuery] string[] roleNames)
     {
         var featureKey = await _featureKeyRepository.GetByName(fkName);
@@ -57,7 +57,7 @@ public class PermissionsController : ControllerBase
         return Ok(permissions);
     }
 
-    [HttpPost("featute-key/{fkName}")]
+    [HttpPost("{fkName}")]
     public async Task<IActionResult> CreatePermissions(string fkName, [FromBody] PermissionsRequest request)
     {
         var featureKey = await _featureKeyRepository.GetByName(fkName);
@@ -94,7 +94,7 @@ public class PermissionsController : ControllerBase
         return Ok(featureKey.ToDto());
     }
 
-    [HttpPut("featute-key/{fkName}/role/{roleName}/{permissions}")]
+    [HttpPut("{fkName}/role/{roleName}/{permissions}")]
     public async Task<IActionResult> UpdatePermissions(string fkName, string roleName, Permissions permissions)
     {
         var featureKey = await _featureKeyRepository.GetByName(fkName);

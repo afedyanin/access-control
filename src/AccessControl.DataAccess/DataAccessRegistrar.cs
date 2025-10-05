@@ -14,6 +14,7 @@ public static class DataAccessRegistrar
         services.AddSingleton<IRolesRepository, RolesRepository>();
         services.AddSingleton<IFeatureKeysRepository, FeatureKeysRepository>();
         services.AddSingleton<IUsersRepository, UsersRepository>();
+        services.AddSingleton<IResourcesRepository, ResourcesRepository>();
 
         return services;
     }

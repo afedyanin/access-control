@@ -12,6 +12,8 @@ public class AccessControlDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
 
+    public DbSet<Resource> Resources { get; set; }
+
 
     public AccessControlDbContext(DbContextOptions<AccessControlDbContext> options) : base(options)
     {
@@ -22,5 +24,6 @@ public class AccessControlDbContext : DbContext
         new FeatureKeyEntityConfiguration().Configure(modelBuilder.Entity<FeatureKey>());
         new RoleEntityConfiguration().Configure(modelBuilder.Entity<Role>());
         new UserEntityConfiguration().Configure(modelBuilder.Entity<User>());
+        new ResourceEntityConfiguration().Configure(modelBuilder.Entity<Resource>());
     }
 }

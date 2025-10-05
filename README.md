@@ -5,13 +5,17 @@
 
 ### 2025-10-05
 
-- CRUD for Users
-- CRUD for Environments
-- Runtime Check Examples
-- Admin UI
-- API Key for Admin Access
-- Database Schema
++ CRUD for Users
++ CRUD for Environments
+
 - Refit Client & Contracts
+- Runtime Check Examples
+
+- Database Schema
+- API Key for Admin Access
+
+- Test API (http files + unit tests)
+- Admin UI
 
 
 ### 2025-09-29
