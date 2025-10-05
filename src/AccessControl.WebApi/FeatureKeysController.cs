@@ -12,6 +12,7 @@ namespace AccessControl.WebApi;
 public class FeatureKeysController : ControllerBase
 {
     private readonly IFeatureKeysRepository _featureKeyRepository;
+
     public FeatureKeysController(IFeatureKeysRepository featureKeyRepository)
     {
         _featureKeyRepository = featureKeyRepository;

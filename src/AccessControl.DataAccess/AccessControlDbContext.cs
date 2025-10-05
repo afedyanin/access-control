@@ -10,6 +10,8 @@ public class AccessControlDbContext : DbContext
 
     public DbSet<Role> Roles { get; set; }
 
+    public DbSet<User> Users { get; set; }
+
 
     public AccessControlDbContext(DbContextOptions<AccessControlDbContext> options) : base(options)
     {
@@ -19,6 +21,6 @@ public class AccessControlDbContext : DbContext
     {
         new FeatureKeyEntityConfiguration().Configure(modelBuilder.Entity<FeatureKey>());
         new RoleEntityConfiguration().Configure(modelBuilder.Entity<Role>());
+        new UserEntityConfiguration().Configure(modelBuilder.Entity<User>());
     }
-
 }

@@ -2,6 +2,18 @@
 
 ## TODO
 
+
+### 2025-10-05
+
+- CRUD for Users
+- CRUD for Environments
+- Runtime Check Examples
+- Admin UI
+- API Key for Admin Access
+- Database Schema
+- Refit Client & Contracts
+
+
 ### 2025-09-29
 
 - unique constrains for fk.Name and role.Name

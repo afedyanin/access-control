@@ -1,4 +1,3 @@
-using System.Xml.Linq;
 using AccessControl.Contracts;
 using AccessControl.Contracts.Requests;
 using AccessControl.Model;
@@ -28,29 +27,15 @@ public class PermissionsController : ControllerBase
         _logger = logger;
     }
 
-    // TODO: Test it
     [HttpGet("all-featute-keys")]
     public async Task<IActionResult> GetAllFeatureKeysPermissions([FromQuery] string[] roleNames)
     {
         var featureKeys = await _featureKeyRepository.GetAll();
-
         var res = new Dictionary<string, Permissions>();
 
         foreach (var featureKey in featureKeys)
         {
-            // TODO: Extract method
-            var effective = Permissions.None;
-
-            var dict = featureKey.FeatureKeyRoles.ToDictionary(fkr => fkr.RoleName);
-
-            foreach (var roleName in roleNames)
-            {
-                if (dict.TryGetValue(roleName, out var fkRole))
-                {
-                    effective |= fkRole.Permissions;
-                }
-            }
-
+            var effective = featureKey.GetEffectivePermissions(roleNames);
             res[featureKey.Name] = effective;
         }
 
@@ -67,19 +52,9 @@ public class PermissionsController : ControllerBase
             return NotFound();
         }
 
-        var dict = featureKey.FeatureKeyRoles.ToDictionary(fkr => fkr.RoleName);
+        var permissions = featureKey.GetEffectivePermissions(roleNames);
 
-        var effective = Permissions.None;
-
-        foreach (var roleName in roleNames)
-        {
-            if (dict.TryGetValue(roleName, out var fkRole))
-            {
-                effective |= fkRole.Permissions;
-            }
-        }
-
-        return Ok(effective);
+        return Ok(permissions);
     }
 
     [HttpPost("featute-key/{fkName}")]
