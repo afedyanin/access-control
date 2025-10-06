@@ -6,6 +6,10 @@
 ### 2025-10-06
 
 - [Проверка подлинности и авторизация в ASP.NET Core Blazor](https://learn.microsoft.com/ru-ru/aspnet/core/blazor/security/?view=aspnetcore-9.0&tabs=visual-studio)
+- [How To Implement API Key Authentication In ASP.NET Core](https://www.milanjovanovic.tech/blog/how-to-implement-api-key-authentication-in-aspnet-core)
+- [Implement API Key Authentication in ASP.NET Core](https://code-maze.com/aspnetcore-api-key-authentication/)
+- "asp net api key authorization swagger"
+
 
 ### 2025-10-05
 
@@ -15,7 +19,7 @@
 - Refit Client & Contracts
 - Runtime Check Examples
 
-- Database Schema
++ Database Schema
 - API Key for Admin Access
 
 - Test API (http files + unit tests)
