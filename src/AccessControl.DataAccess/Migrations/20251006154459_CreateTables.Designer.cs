@@ -12,14 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccessControl.DataAccess.Migrations
 {
     [DbContext(typeof(AccessControlDbContext))]
-    [Migration("20251005082722_CreateTables_v3")]
-    partial class CreateTables_v3
+    [Migration("20251006154459_CreateTables")]
+    partial class CreateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("access_control")
                 .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -34,7 +35,7 @@ namespace AccessControl.DataAccess.Migrations
                     b.HasKey("Name")
                         .HasName("feature_keys_pkey");
 
-                    b.ToTable("feature_keys", (string)null);
+                    b.ToTable("feature_keys", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.FeatureKeyRole", b =>
@@ -55,7 +56,7 @@ namespace AccessControl.DataAccess.Migrations
 
                     b.HasIndex("RoleName");
 
-                    b.ToTable("feature_key_role", (string)null);
+                    b.ToTable("feature_key_role", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.Resource", b =>
@@ -73,7 +74,7 @@ namespace AccessControl.DataAccess.Migrations
                     b.HasKey("Id")
                         .HasName("resources_pkey");
 
-                    b.ToTable("resources", (string)null);
+                    b.ToTable("resources", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.ResourceRole", b =>
@@ -94,7 +95,7 @@ namespace AccessControl.DataAccess.Migrations
 
                     b.HasIndex("RoleName");
 
-                    b.ToTable("resource_role", (string)null);
+                    b.ToTable("resource_role", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.Role", b =>
@@ -110,7 +111,7 @@ namespace AccessControl.DataAccess.Migrations
                     b.HasKey("Name")
                         .HasName("roles_pkey");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("roles", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.User", b =>
@@ -126,7 +127,7 @@ namespace AccessControl.DataAccess.Migrations
                     b.HasKey("Name")
                         .HasName("users_pkey");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("users", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.UserRole", b =>
@@ -143,7 +144,7 @@ namespace AccessControl.DataAccess.Migrations
 
                     b.HasIndex("UserName");
 
-                    b.ToTable("user_role", (string)null);
+                    b.ToTable("user_role", "access_control");
                 });
 
             modelBuilder.Entity("AccessControl.Model.FeatureKeyRole", b =>

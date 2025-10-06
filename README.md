@@ -3,6 +3,10 @@
 ## TODO
 
 
+### 2025-10-06
+
+- [Проверка подлинности и авторизация в ASP.NET Core Blazor](https://learn.microsoft.com/ru-ru/aspnet/core/blazor/security/?view=aspnetcore-9.0&tabs=visual-studio)
+
 ### 2025-10-05
 
 + CRUD for Users
@@ -34,8 +38,5 @@
 - [Nice to knows when implementing policy-based authorization in .NET](https://timdeschryver.dev/blog/nice-to-knows-when-implementing-policy-based-authorization-in-net)
 - [Globally Require Authenticated Users By Default Using Fallback Policies in ASP.NET Core](https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/)
 - [Authorization with external service sample](https://github.com/dotnet/AspNetCore.Docs.Samples/tree/main/samples/aspnetcore-authz-with-ext-authz-service)
-
-
-
 
 

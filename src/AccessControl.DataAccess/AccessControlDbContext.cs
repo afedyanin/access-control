@@ -21,6 +21,8 @@ public class AccessControlDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("access_control");
+
         new FeatureKeyEntityConfiguration().Configure(modelBuilder.Entity<FeatureKey>());
         new RoleEntityConfiguration().Configure(modelBuilder.Entity<Role>());
         new UserEntityConfiguration().Configure(modelBuilder.Entity<User>());
