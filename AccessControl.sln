@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.WebApi", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Contracts", "src\AccessControl.Contracts\AccessControl.Contracts.csproj", "{3049C7F7-E9B4-427E-B074-07F6975C27B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Client.Tests", "tests\AccessControl.Client.Tests\AccessControl.Client.Tests.csproj", "{2E957191-E1D4-47F8-96A8-8D8A10209C4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{3049C7F7-E9B4-427E-B074-07F6975C27B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3049C7F7-E9B4-427E-B074-07F6975C27B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3049C7F7-E9B4-427E-B074-07F6975C27B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E957191-E1D4-47F8-96A8-8D8A10209C4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E957191-E1D4-47F8-96A8-8D8A10209C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E957191-E1D4-47F8-96A8-8D8A10209C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E957191-E1D4-47F8-96A8-8D8A10209C4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +84,7 @@ Global
 		{5B19233A-3FB4-4570-94A9-EE62F609EDDB} = {60D654F0-48A8-42F6-A4AF-E3A3C13327D4}
 		{8411E994-AE21-4955-BE25-F0BF4186F5B3} = {6A443D14-3352-4616-8C96-02E6DBECB5CD}
 		{3049C7F7-E9B4-427E-B074-07F6975C27B1} = {6A443D14-3352-4616-8C96-02E6DBECB5CD}
+		{2E957191-E1D4-47F8-96A8-8D8A10209C4B} = {60D654F0-48A8-42F6-A4AF-E3A3C13327D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8105A308-F341-42D1-81BA-FB5A382EA147}
