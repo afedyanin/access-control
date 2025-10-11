@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.Server.Controllers;
+
+[ApiExplorerSettings(GroupName = "v1")]
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace AccessControl.WebApi;
 
 [ApiKey]
+[ApiExplorerSettings(GroupName = ApiKeyConsts.ApiGroupName)]
 [Route("api/users")]
 [ApiController]
 

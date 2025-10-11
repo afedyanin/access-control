@@ -1,10 +1,13 @@
 using AccessControl.Contracts.Requests;
 using AccessControl.Model;
 using AccessControl.Model.Repositories;
+using AccessControl.WebApi.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
 
+[ApiKey]
+[ApiExplorerSettings(GroupName = ApiKeyConsts.ApiGroupName)]
 [Route("api/roles")]
 [ApiController]
 public class RolesController : ControllerBase
