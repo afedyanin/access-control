@@ -1,18 +1,13 @@
-using AccessControl.Contracts;
-using Refit;
-
 namespace AccessControl.Client.Tests;
 
 [TestFixture(Category = "Web API", Explicit = true,
-    Description = "Need to run Web API server before start tests. " +
-    "Use dotnet run command inside AccessControl.Server project.")]
-public class RolesAdminClientTests
+    Description = "Need to run Web API Server before start tests.")]
+public class RolesAdminClientTests : ApiClientBase
 {
     [Test]
     public async Task CanGetAllRoles()
     {
-        var client = RestService.For<IAccessControlAdminClient>(ApiConsts.BaseUrl);
-        var roles = await client.GetAllRoles();
+        var roles = await AdminClient.GetAllRoles();
         Assert.That(roles, Is.Not.Null);
     }
 }

@@ -1,6 +1,7 @@
 using Refit;
 
 namespace AccessControl.Contracts;
+
 public interface IAccessControlClient
 {
     #region FeatureKeyPermissionsController
