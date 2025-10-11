@@ -20,7 +20,7 @@
 - Runtime Check Examples
 
 + Database Schema
-- API Key for Admin Access
++ API Key for Admin Access
 
 - Test API (http files + unit tests)
 - Admin UI

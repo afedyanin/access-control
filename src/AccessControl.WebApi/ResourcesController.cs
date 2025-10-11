@@ -22,7 +22,7 @@ public class ResourcesController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAllResources()
     {
         var resources = await _resourcesRepository.GetAll();
 
@@ -30,7 +30,7 @@ public class ResourcesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetId(Guid id)
+    public async Task<IActionResult> GetResourceById(Guid id)
     {
         var resource = await _resourcesRepository.GetById(id);
 
@@ -43,7 +43,7 @@ public class ResourcesController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<IActionResult> Create([FromBody] ResourceRequest request)
+    public async Task<IActionResult> CreateResource([FromBody] ResourceRequest request)
     {
         // TODO: Check if already exists
 
@@ -64,7 +64,7 @@ public class ResourcesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> DeleteResource(Guid id)
     {
         var deletedCount = await _resourcesRepository.Delete(id);
         return Ok(deletedCount);

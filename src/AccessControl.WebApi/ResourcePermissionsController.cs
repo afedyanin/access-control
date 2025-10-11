@@ -46,7 +46,7 @@ public class ResourcePermissionsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetEffectivePermissions(Guid id, [FromQuery] string[] roleNames)
+    public async Task<IActionResult> GetEffectiveResourcePermissions(Guid id, [FromQuery] string[] roleNames)
     {
         var resource = await _resourcesRepository.GetById(id);
 
@@ -61,7 +61,7 @@ public class ResourcePermissionsController : ControllerBase
     }
 
     [HttpPost("{id:guid}")]
-    public async Task<IActionResult> CreatePermissions(Guid id, [FromBody] PermissionsRequest request)
+    public async Task<IActionResult> CreateResourcePermissions(Guid id, [FromBody] PermissionsRequest request)
     {
         var resource = await _resourcesRepository.GetById(id);
 
@@ -98,7 +98,7 @@ public class ResourcePermissionsController : ControllerBase
     }
 
     [HttpPut("{id:guid}/role/{roleName}/{permissions}")]
-    public async Task<IActionResult> UpdatePermissions(Guid id, string roleName, Permissions permissions)
+    public async Task<IActionResult> UpdateResourcePermissions(Guid id, string roleName, Permissions permissions)
     {
         var resource = await _resourcesRepository.GetById(id);
 

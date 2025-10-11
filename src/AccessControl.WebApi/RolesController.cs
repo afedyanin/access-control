@@ -2,6 +2,7 @@ using AccessControl.Contracts.Requests;
 using AccessControl.Model;
 using AccessControl.Model.Repositories;
 using AccessControl.WebApi.Authorization;
+using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
@@ -19,14 +20,14 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAllRoles()
     {
         var roles = await _roleRepository.GetAll();
-        return Ok(roles);
+        return Ok(roles.ToDto());
     }
 
     [HttpGet("{name}")]
-    public async Task<IActionResult> GetByName(string name)
+    public async Task<IActionResult> GetRoleByName(string name)
     {
         var role = await _roleRepository.GetByName(name);
 
@@ -35,11 +36,11 @@ public class RolesController : ControllerBase
             return NotFound();
         }
 
-        return Ok(role);
+        return Ok(role.ToDto());
     }
 
     [HttpPost()]
-    public async Task<IActionResult> Create([FromBody] RoleRequest request)
+    public async Task<IActionResult> CreateRole([FromBody] RoleRequest request)
     {
         var role = new Role
         {
@@ -54,11 +55,11 @@ public class RolesController : ControllerBase
             return BadRequest();
         }
 
-        return Ok(role);
+        return Ok(role.ToDto());
     }
 
     [HttpPut()]
-    public async Task<IActionResult> Update([FromBody] RoleRequest request)
+    public async Task<IActionResult> UpdateRole([FromBody] RoleRequest request)
     {
         var found = await _roleRepository.GetByName(request.Name);
 
@@ -76,12 +77,12 @@ public class RolesController : ControllerBase
             return BadRequest();
         }
 
-        return Ok(found);
+        return Ok(found.ToDto());
     }
 
 
     [HttpDelete("{name}")]
-    public async Task<IActionResult> Delete(string name)
+    public async Task<IActionResult> DeleteRole(string name)
     {
         var deletedCount = await _roleRepository.Delete(name);
         return Ok(deletedCount);

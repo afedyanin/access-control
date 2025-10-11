@@ -30,7 +30,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAllUsers()
     {
         var users = await _usersRepository.GetAll();
 
@@ -40,18 +40,18 @@ public class UsersController : ControllerBase
     [HttpGet("{name}")]
     public async Task<IActionResult> GetByName(string name)
     {
-        var role = await _usersRepository.GetByName(name);
+        var user = await _usersRepository.GetByName(name);
 
-        if (role == null)
+        if (user == null)
         {
             return NotFound();
         }
 
-        return Ok(role.ToDto());
+        return Ok(user.ToDto());
     }
 
     [HttpPost()]
-    public async Task<IActionResult> Create([FromBody] UserRequest request)
+    public async Task<IActionResult> CreateUser([FromBody] UserRequest request)
     {
         var user = new User
         {
@@ -70,7 +70,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{name}")]
-    public async Task<IActionResult> Delete(string name)
+    public async Task<IActionResult> DeleteUser(string name)
     {
         var deletedCount = await _usersRepository.Delete(name);
         return Ok(deletedCount);

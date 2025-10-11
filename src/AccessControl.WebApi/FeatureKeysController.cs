@@ -22,7 +22,7 @@ public class FeatureKeysController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAllFeatureKeys()
     {
         var featureKeys = await _featureKeyRepository.GetAll();
 
@@ -30,7 +30,7 @@ public class FeatureKeysController : ControllerBase
     }
 
     [HttpGet("{name}")]
-    public async Task<IActionResult> GetByName(string name)
+    public async Task<IActionResult> GetFeatureKeyByName(string name)
     {
         var featureKey = await _featureKeyRepository.GetByName(name);
 
@@ -43,7 +43,7 @@ public class FeatureKeysController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<IActionResult> Create([FromBody] FeatureKeyRequest request)
+    public async Task<IActionResult> CreateFeatureKey([FromBody] FeatureKeyRequest request)
     {
         var featureKey = new FeatureKey
         {
@@ -61,7 +61,7 @@ public class FeatureKeysController : ControllerBase
     }
 
     [HttpDelete("{name}")]
-    public async Task<IActionResult> Delete(string name)
+    public async Task<IActionResult> DeleteFeatureKey(string name)
     {
         var deletedCount = await _featureKeyRepository.Delete(name);
         return Ok(deletedCount);
