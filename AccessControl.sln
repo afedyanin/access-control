@@ -6,11 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		docs\0001.png = docs\0001.png
-		docs\0002.png = docs\0002.png
-		docs\0003.png = docs\0003.png
 		BACKLOG.md = BACKLOG.md
-		docs\NIST.SP.800-162.pdf = docs\NIST.SP.800-162.pdf
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -31,6 +27,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Contracts", "src\AccessControl.Contracts\AccessControl.Contracts.csproj", "{3049C7F7-E9B4-427E-B074-07F6975C27B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Client.Tests", "tests\AccessControl.Client.Tests\AccessControl.Client.Tests.csproj", "{2E957191-E1D4-47F8-96A8-8D8A10209C4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{2E21F39D-CB83-4733-9920-384BFEB815FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,7 +69,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D45D4265-CA86-4CCF-8FE2-F0D230A4AD59} = {6A443D14-3352-4616-8C96-02E6DBECB5CD}
+		{D45D4265-CA86-4CCF-8FE2-F0D230A4AD59} = {2E21F39D-CB83-4733-9920-384BFEB815FC}
 		{351D2C6D-1268-497C-9F5B-A1C888BA19FE} = {6A443D14-3352-4616-8C96-02E6DBECB5CD}
 		{D4CD4573-977E-4315-97D9-8363F0EEA236} = {6A443D14-3352-4616-8C96-02E6DBECB5CD}
 		{5B19233A-3FB4-4570-94A9-EE62F609EDDB} = {60D654F0-48A8-42F6-A4AF-E3A3C13327D4}

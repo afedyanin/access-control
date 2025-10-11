@@ -1,6 +1,0 @@
-@AccessControl.Server_HostAddress = http://localhost:5007
-
-GET {{AccessControl.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

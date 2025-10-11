@@ -21,7 +21,7 @@ public class Program
         var connectionString = configuration.GetConnectionString("AccessControlDbConnection");
 
         builder.Services.AddAccessCotrolDataAccess(connectionString!);
-        builder.Services.AddApiKeyuthorization();
+        builder.Services.AddApiKeyAuthorization();
 
         builder.Services.AddEndpointsApiExplorer();
 
