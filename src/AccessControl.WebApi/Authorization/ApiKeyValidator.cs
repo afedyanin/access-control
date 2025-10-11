@@ -1,14 +1,34 @@
+using Microsoft.Extensions.Configuration;
+
 namespace AccessControl.WebApi.Authorization;
 public class ApiKeyValidator : IApiKeyValidator
 {
-    public bool IsValid(string apiKey)
+    private readonly IConfiguration _configuration;
+
+    public ApiKeyValidator(IConfiguration configuration)
     {
-        // Implement logic for validating the API key.
-        return false;
+        _configuration = configuration;
+    }
+
+    public bool IsValid(string userApiKey)
+    {
+        if (string.IsNullOrWhiteSpace(userApiKey))
+        {
+            return false;
+        }
+
+        var apiKey = _configuration.GetSection(ApiKeyConsts.ApiKeyName).Value;
+
+        if (apiKey == null || apiKey != userApiKey)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
 
 public interface IApiKeyValidator
 {
-    public bool IsValid(string apiKey);
+    public bool IsValid(string userApiKey);
 }
