@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using AccessControl.WebApi;
 using AccessControl.DataAccess;
+using AccessControl.WebApi.Authorization;
 
 namespace AccessControl.Server;
 
@@ -19,6 +20,7 @@ public class Program
         var connectionString = configuration.GetConnectionString("AccessControlDbConnection");
 
         builder.Services.AddAccessCotrolDataAccess(connectionString!);
+        builder.Services.AddApiKeyuthorization();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
