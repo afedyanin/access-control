@@ -31,36 +31,35 @@ internal class UsersRepository : RepositoryBase, IUsersRepository
             .SingleOrDefaultAsync(x => x.Name == name);
     }
 
-    public async Task<bool> Save(User user)
+    public async Task<bool> Save(UserDbo userDbo)
     {
         using var context = await GetDbContext();
 
-        var roleNames = user.Roles.Select(x => x.Name).ToArray();
-
-        var newRoles = await context
+        var rolesToSave = await context
             .Roles
-            .Where(r => roleNames.Contains(r.Name))
+            .Where(r => userDbo.Roles.Contains(r.Name))
             .ToArrayAsync();
 
-        var existing = await context
+        var existingUser = await context
             .Users
             .Include(fk => fk.Roles)
-            .FirstOrDefaultAsync(p => p.Name == user.Name);
+            .FirstOrDefaultAsync(p => p.Name == userDbo.Name);
 
-        if (existing != null)
+        if (existingUser == null)
         {
-            // UPDATE EXISTING USER
-            existing.Roles.RemoveAll(r => !newRoles.Contains(r));
+            var newUser = new User
+            {
+                Name = userDbo.Name,
+                Email = userDbo.Email,
+                Roles = [.. rolesToSave]
+            };
 
-            var rolesToAdd = newRoles.Where(r => !existing.Roles.Contains(r)).ToArray();
-            existing.Roles.AddRange(rolesToAdd);
+            context.Users.Add(newUser);
         }
         else
         {
-            // ADD NEW USER
-            user.Roles.Clear();
-            user.Roles.AddRange(newRoles);
-            context.Users.Add(user);
+            existingUser.Roles.RemoveAll(r => !rolesToSave.Contains(r));
+            existingUser.Roles.AddRange(rolesToSave.Where(r => !existingUser.Roles.Contains(r)));
         }
 
         //Console.WriteLine("\nTracked changes:");

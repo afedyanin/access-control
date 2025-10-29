@@ -5,7 +5,7 @@ public interface IUsersRepository
 
     public Task<User?> GetByName(string name);
 
-    public Task<bool> Save(User user);
+    public Task<bool> Save(UserDbo user);
 
     public Task<int> Delete(string name);
 }

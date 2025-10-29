@@ -78,23 +78,17 @@ public interface IAccessControlAdminClient : IAccessControlClient
 
     #region UsersController
 
+    [Post("/api/users")]
+    public Task<UserDto> CreateUser([Body] UserDto userDto);
+
     [Get("/api/users")]
     public Task<UserDto[]> GetAllUsers();
 
     [Get("/api/users/{name}")]
     public Task<UserDto> GetByName(string name);
 
-    [Post("/api/users")]
-    public Task<UserDto> CreateUser([Body] UserRequest request);
-
     [Delete("/api/users/{name}")]
     public Task<int> DeleteUser(string name);
-
-    [Post("/api/users/{name}/roles")]
-    public Task<UserDto> AssignRoles(string name, [Query] string[] roleNames);
-
-    [Put("/api/users/{name}/roles/{roleName}")]
-    public Task<UserDto> AssignRole(string name, string roleName);
 
     #endregion
 }

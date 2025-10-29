@@ -1,4 +1,3 @@
-using System.Linq;
 using AccessControl.Model;
 
 namespace AccessControl.DataAccess.Tests;
@@ -9,7 +8,7 @@ public class UsersRepositoryTests : RepositoryTestBase
     [Test]
     public async Task CanSaveUserWithoutRoles()
     {
-        var user = new User()
+        var user = new UserDbo()
         {
             Name = $"TestUserWithoutRoles_{Guid.NewGuid()}",
         };
@@ -24,20 +23,13 @@ public class UsersRepositoryTests : RepositoryTestBase
     [TestCase("")]
     public async Task CanSaveUserWithRoles(string roleNamesString)
     {
-        var user = new User()
+        var roleNames = roleNamesString.Split(',') ?? [];
+
+        var user = new UserDbo()
         {
             Name = $"UserWithRoles",
+            Roles = roleNames
         };
-
-        var roleNames = roleNamesString.Split(',') ?? [];
-        var roles = await RolesRepository.GetByNames(roleNames);
-        var roleNamesToSave = roles.Select(x => x.Name).ToArray();
-        Console.WriteLine($"Roles to save: {string.Join(',', roleNamesToSave)}");
-
-        foreach (var role in roles)
-        {
-            user.Roles.Add(role);
-        }
 
         _ = await UsersRepository.Save(user);
 
@@ -50,10 +42,13 @@ public class UsersRepositoryTests : RepositoryTestBase
 
         foreach (var role in roleNames)
         {
+            if (string.IsNullOrEmpty(role))
+            {
+                continue;
+            }
             Assert.That(savedRoles, Does.Contain(role));
         }
     }
-
 
     [Test]
     public async Task CanGetUsers()

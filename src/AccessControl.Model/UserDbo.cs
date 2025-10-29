@@ -1,6 +1,5 @@
-namespace AccessControl.Contracts;
-
-public record class UserDto
+namespace AccessControl.Model;
+public class UserDbo
 {
     public required string Name { get; set; }
 

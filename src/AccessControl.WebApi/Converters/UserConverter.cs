@@ -14,4 +14,12 @@ internal static class UserConverter
             Email = user.Email,
             Roles = user.Roles.Select(r => r.Name).ToArray(),
         };
+
+    public static UserDbo FromDto(this UserDto user)
+        => new UserDbo
+        {
+            Name = user.Name,
+            Email = user.Email,
+            Roles = user.Roles,
+        };
 }

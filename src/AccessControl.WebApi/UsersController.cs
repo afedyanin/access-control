@@ -1,10 +1,8 @@
-using AccessControl.Contracts.Requests;
-using AccessControl.Model;
+using AccessControl.Contracts;
 using AccessControl.Model.Repositories;
 using AccessControl.WebApi.Authorization;
 using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AccessControl.WebApi;
 
@@ -16,17 +14,30 @@ namespace AccessControl.WebApi;
 public class UsersController : ControllerBase
 {
     private readonly IUsersRepository _usersRepository;
-    private readonly IRolesRepository _rolesRepository;
-    private readonly ILogger<UsersController> _logger;
 
-    public UsersController(
-        IUsersRepository usersRepository,
-        IRolesRepository rolesRepository,
-        ILogger<UsersController> logger)
+    public UsersController(IUsersRepository usersRepository)
     {
         _usersRepository = usersRepository;
-        _rolesRepository = rolesRepository;
-        _logger = logger;
+    }
+
+    [HttpPost()]
+    public async Task<IActionResult> CreateUser(UserDto user)
+    {
+        var saved = await _usersRepository.Save(user.FromDto());
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save User={user}");
+        }
+
+        var savedUser = await _usersRepository.GetByName(user.Name);
+
+        if (savedUser == null)
+        {
+            return NotFound($"Cannot find user by Name={user.Name}");
+        }
+
+        return Ok(savedUser.ToDto());
     }
 
     [HttpGet()]
@@ -44,26 +55,7 @@ public class UsersController : ControllerBase
 
         if (user == null)
         {
-            return NotFound();
-        }
-
-        return Ok(user.ToDto());
-    }
-
-    [HttpPost()]
-    public async Task<IActionResult> CreateUser([FromBody] UserRequest request)
-    {
-        var user = new User
-        {
-            Name = request.Name,
-            Email = request.Email,
-        };
-
-        var saved = await _usersRepository.Save(user);
-
-        if (!saved)
-        {
-            return BadRequest();
+            return NotFound($"Cannot find user by Name={name}");
         }
 
         return Ok(user.ToDto());
@@ -74,87 +66,5 @@ public class UsersController : ControllerBase
     {
         var deletedCount = await _usersRepository.Delete(name);
         return Ok(deletedCount);
-    }
-
-    [HttpPost("{name}/roles")]
-    public async Task<IActionResult> AssignRoles(string name, [FromQuery] string[] roleNames)
-    {
-        var user = await _usersRepository.GetByName(name);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var roles = await _rolesRepository.GetByNames(roleNames ?? []);
-
-        user.UserRoles.Clear();
-
-        foreach (var role in roles)
-        {
-            var ur = new UserRole
-            {
-                User = user,
-                Role = role,
-            };
-
-            user.UserRoles.Add(ur);
-        }
-
-        var saved = await _usersRepository.Save(user);
-
-        if (!saved)
-        {
-            return BadRequest($"Cannot save roles for User={name}");
-        }
-
-        return Ok(user.ToDto());
-    }
-
-    [HttpPut("{name}/roles/{roleName}")]
-    public async Task<IActionResult> AssignRole(string name, string roleName)
-    {
-        var user = await _usersRepository.GetByName(name);
-
-        if (user == null)
-        {
-            _logger.LogError($"User with name={name} is not found.");
-            return NotFound();
-        }
-
-        var role = await _rolesRepository.GetByName(roleName);
-
-        if (role == null)
-        {
-            _logger.LogError($"Role with name={roleName} is not found.");
-            return NotFound();
-        }
-
-        var userRole = user.UserRoles.FirstOrDefault(ur => ur.RoleName == role.Name);
-
-        if (userRole != null)
-        {
-            // Role already assigned
-            return Ok(user.ToDto());
-        }
-
-        userRole = new UserRole
-        {
-            User = user,
-            Role = role,
-        };
-
-        user.UserRoles.Add(userRole);
-
-        var saved = await _usersRepository.Save(user);
-
-        if (!saved)
-        {
-            var message = $"Cannot update role for User={name} Role={roleName}";
-            _logger.LogError(message);
-            return BadRequest(message);
-        }
-
-        return Ok(user.ToDto());
     }
 }
