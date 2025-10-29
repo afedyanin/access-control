@@ -35,33 +35,39 @@ internal class UsersRepository : RepositoryBase, IUsersRepository
     {
         using var context = await GetDbContext();
 
+        var roleNames = user.Roles.Select(x => x.Name).ToArray();
+
+        var newRoles = await context
+            .Roles
+            .Where(r => roleNames.Contains(r.Name))
+            .ToArrayAsync();
+
         var existing = await context
             .Users
+            .Include(fk => fk.Roles)
             .FirstOrDefaultAsync(p => p.Name == user.Name);
 
         if (existing != null)
         {
-            existing.Roles.Clear();
-            foreach (var role in user.Roles)
-            {
-                context.Attach(role);
-                existing.Roles.Add(role);
-            }
+            // UPDATE EXISTING USER
+            existing.Roles.RemoveAll(r => !newRoles.Contains(r));
 
-            existing.UserRoles.Clear();
-            foreach (var userRole in user.UserRoles)
-            {
-                context.Attach(userRole.Role);
-                existing.UserRoles.Add(userRole);
-            }
+            var rolesToAdd = newRoles.Where(r => !existing.Roles.Contains(r)).ToArray();
+            existing.Roles.AddRange(rolesToAdd);
         }
         else
         {
+            // ADD NEW USER
+            user.Roles.Clear();
+            user.Roles.AddRange(newRoles);
             context.Users.Add(user);
         }
 
-        var savedRecords = await context.SaveChangesAsync();
+        //Console.WriteLine("\nTracked changes:");
+        //context.ChangeTracker.DetectChanges();
+        //Console.WriteLine(context.ChangeTracker.DebugView.LongView);
 
+        var savedRecords = await context.SaveChangesAsync();
         return savedRecords > 0;
     }
 

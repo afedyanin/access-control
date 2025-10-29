@@ -5,13 +5,13 @@ namespace AccessControl.DataAccess.Tests;
 [TestFixture(Category = "Database", Explicit = true)]
 public class RolesRepositoryTests : RepositoryTestBase
 {
-    [Test]
-    public async Task CanSaveRole()
+    [TestCase("Admin")]
+    [TestCase("Developer")]
+    public async Task CanAddRole(string roleName)
     {
         var role = new Role()
         {
-            Name = "Some Role",
-            Description = "Test description"
+            Name = roleName
         };
 
         var saved = await RolesRepository.Save(role);
