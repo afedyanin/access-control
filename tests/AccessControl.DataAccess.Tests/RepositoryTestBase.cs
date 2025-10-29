@@ -13,6 +13,7 @@ public class RepositoryTestBase
     protected IDbContextFactory<AccessControlDbContext> DbContextFactory => _serviceProvider.GetRequiredService<IDbContextFactory<AccessControlDbContext>>();
 
     protected IRolesRepository RolesRepository => _serviceProvider.GetRequiredService<IRolesRepository>();
+    protected IUsersRepository UsersRepository => _serviceProvider.GetRequiredService<IUsersRepository>();
 
     protected IFeatureKeysRepository FeatureKeysRepository => _serviceProvider.GetRequiredService<IFeatureKeysRepository>();
 
