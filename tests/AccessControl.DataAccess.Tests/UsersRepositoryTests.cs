@@ -1,14 +1,14 @@
-using AccessControl.Model;
+using AccessControl.Contracts.Entities;
 
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-public class UsersRepositoryTests : RepositoryTestBase
+internal class UsersRepositoryTests : RepositoryTestBase
 {
     [Test]
     public async Task CanSaveUserWithoutRoles()
     {
-        var user = new UserDbo()
+        var user = new User()
         {
             Name = $"TestUserWithoutRoles_{Guid.NewGuid()}",
         };
@@ -25,7 +25,7 @@ public class UsersRepositoryTests : RepositoryTestBase
     {
         var roleNames = roleNamesString.Split(',') ?? [];
 
-        var user = new UserDbo()
+        var user = new User()
         {
             Name = $"UserWithRoles",
             Roles = roleNames
@@ -36,9 +36,7 @@ public class UsersRepositoryTests : RepositoryTestBase
         var savedUser = await UsersRepository.GetByName(user.Name);
         Assert.That(savedUser, Is.Not.Null);
 
-        var savedRoles = savedUser.Roles.Select(x => x.Name).ToArray();
-
-        Console.WriteLine($"saved roles: {string.Join(',', savedRoles)}");
+        Console.WriteLine($"saved roles: {string.Join(',', savedUser.Roles)}");
 
         foreach (var role in roleNames)
         {
@@ -46,7 +44,7 @@ public class UsersRepositoryTests : RepositoryTestBase
             {
                 continue;
             }
-            Assert.That(savedRoles, Does.Contain(role));
+            Assert.That(savedUser.Roles, Does.Contain(role));
         }
     }
 

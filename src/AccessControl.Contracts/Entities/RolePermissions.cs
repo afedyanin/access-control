@@ -1,4 +1,4 @@
-namespace AccessControl.Contracts;
+namespace AccessControl.Contracts.Entities;
 public record class RolePermissions
 {
     public required string RoleName { get; init; }

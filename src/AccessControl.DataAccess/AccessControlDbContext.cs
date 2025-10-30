@@ -1,18 +1,18 @@
+using AccessControl.DataAccess.Dbos;
 using AccessControl.DataAccess.Entities;
-using AccessControl.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess;
 
-public class AccessControlDbContext : DbContext
+internal class AccessControlDbContext : DbContext
 {
-    public DbSet<FeatureKey> FeatureKeys { get; set; }
+    public DbSet<FeatureKeyDbo> FeatureKeys { get; set; }
 
-    public DbSet<Role> Roles { get; set; }
+    public DbSet<RoleDbo> Roles { get; set; }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<UserDbo> Users { get; set; }
 
-    public DbSet<Resource> Resources { get; set; }
+    public DbSet<ResourceDbo> Resources { get; set; }
 
 
     public AccessControlDbContext(DbContextOptions<AccessControlDbContext> options) : base(options)
@@ -23,9 +23,9 @@ public class AccessControlDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("access_control");
 
-        new FeatureKeyEntityConfiguration().Configure(modelBuilder.Entity<FeatureKey>());
-        new RoleEntityConfiguration().Configure(modelBuilder.Entity<Role>());
-        new UserEntityConfiguration().Configure(modelBuilder.Entity<User>());
-        new ResourceEntityConfiguration().Configure(modelBuilder.Entity<Resource>());
+        new FeatureKeyEntityConfiguration().Configure(modelBuilder.Entity<FeatureKeyDbo>());
+        new RoleEntityConfiguration().Configure(modelBuilder.Entity<RoleDbo>());
+        new UserEntityConfiguration().Configure(modelBuilder.Entity<UserDbo>());
+        new ResourceEntityConfiguration().Configure(modelBuilder.Entity<ResourceDbo>());
     }
 }

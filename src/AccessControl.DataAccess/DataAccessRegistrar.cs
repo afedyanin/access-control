@@ -1,5 +1,5 @@
+using AccessControl.Contracts.Repositories;
 using AccessControl.DataAccess.Repositories;
-using AccessControl.Model.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -63,17 +63,18 @@ dotnet_diagnostic.CA2016.severity = suggestion
 dotnet_diagnostic.CA1841.severity = suggestion
 dotnet_diagnostic.CA1805.severity = suggestion
 csharp_style_prefer_readonly_struct_member = true:suggestion
-csharp_style_prefer_primary_constructors = true:suggestion
-csharp_style_expression_bodied_methods = false:silent
+csharp_style_prefer_primary_constructors = false:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
 csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_properties = false:silent
+csharp_style_expression_bodied_properties = true:suggestion
 csharp_style_expression_bodied_indexers = false:silent
-csharp_style_expression_bodied_accessors = false:silent
+csharp_style_expression_bodied_accessors = true:suggestion
 csharp_style_expression_bodied_lambdas = false:silent
-csharp_style_expression_bodied_local_functions = false:silent
+csharp_style_expression_bodied_local_functions = true:suggestion
 csharp_prefer_system_threading_lock = true:suggestion
 csharp_prefer_static_anonymous_function = true:suggestion
+csharp_style_prefer_implicitly_typed_lambda_expression = true:suggestion
 
 ##########################################
 # File Extension Settings

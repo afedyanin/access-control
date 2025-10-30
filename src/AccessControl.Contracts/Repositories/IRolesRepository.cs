@@ -1,6 +1,6 @@
 using AccessControl.Contracts.Entities;
 
-namespace AccessControl.Model.Repositories;
+namespace AccessControl.Contracts.Repositories;
 
 public interface IRolesRepository
 {

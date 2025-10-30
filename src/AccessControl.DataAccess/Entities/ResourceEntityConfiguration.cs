@@ -1,12 +1,12 @@
-using AccessControl.Model;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal sealed class ResourceEntityConfiguration : IEntityTypeConfiguration<Resource>
+internal sealed class ResourceEntityConfiguration : IEntityTypeConfiguration<ResourceDbo>
 {
-    public void Configure(EntityTypeBuilder<Resource> builder)
+    public void Configure(EntityTypeBuilder<ResourceDbo> builder)
     {
         builder.ToTable("resources");
 
@@ -23,7 +23,7 @@ internal sealed class ResourceEntityConfiguration : IEntityTypeConfiguration<Res
 
         builder.HasMany(e => e.Roles)
             .WithMany()
-            .UsingEntity<ResourceRole>(
+            .UsingEntity<ResourceRoleDbo>(
                 j =>
                 {
                     j.ToTable("resource_role");

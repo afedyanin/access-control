@@ -1,5 +1,7 @@
-using AccessControl.Model;
-using AccessControl.Model.Repositories;
+using AccessControl.Contracts.Entities;
+using AccessControl.Contracts.Repositories;
+using AccessControl.DataAccess.Converters;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
@@ -14,43 +16,47 @@ internal class UsersRepository : RepositoryBase, IUsersRepository
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Users
             .Include(fk => fk.Roles)
             .OrderBy(x => x.Name)
             .ToArrayAsync();
+
+        return res.ToEntity();
     }
 
     public async Task<User?> GetByName(string name)
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Users
             .Include(fk => fk.Roles)
             .SingleOrDefaultAsync(x => x.Name == name);
+
+        return res?.ToEntity();
     }
 
-    public async Task<bool> Save(UserDbo userDbo)
+    public async Task<bool> Save(User user)
     {
         using var context = await GetDbContext();
 
         var rolesToSave = await context
             .Roles
-            .Where(r => userDbo.Roles.Contains(r.Name))
+            .Where(r => user.Roles.Contains(r.Name))
             .ToArrayAsync();
 
         var existingUser = await context
             .Users
             .Include(fk => fk.Roles)
-            .FirstOrDefaultAsync(p => p.Name == userDbo.Name);
+            .FirstOrDefaultAsync(p => p.Name == user.Name);
 
         if (existingUser == null)
         {
-            var newUser = new User
+            var newUser = new UserDbo
             {
-                Name = userDbo.Name,
-                Email = userDbo.Email,
+                Name = user.Name,
+                Email = user.Email,
                 Roles = [.. rolesToSave]
             };
 

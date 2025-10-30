@@ -1,12 +1,12 @@
-using AccessControl.Model;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal sealed class UserEntityConfiguration : IEntityTypeConfiguration<User>
+internal sealed class UserEntityConfiguration : IEntityTypeConfiguration<UserDbo>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<UserDbo> builder)
     {
         builder.ToTable("users");
 
@@ -22,7 +22,7 @@ internal sealed class UserEntityConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(e => e.Roles)
             .WithMany()
-            .UsingEntity<UserRole>(
+            .UsingEntity<UserRoleDbo>(
                 j =>
                 {
                     j.ToTable("user_role");

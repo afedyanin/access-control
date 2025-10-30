@@ -1,10 +1,10 @@
-using AccessControl.Model.Repositories;
+using AccessControl.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AccessControl.DataAccess.Tests;
 
-public class RepositoryTestBase
+internal class RepositoryTestBase
 {
     private static readonly string LocalConnection = "Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=access_control;Include Error Detail=True";
 

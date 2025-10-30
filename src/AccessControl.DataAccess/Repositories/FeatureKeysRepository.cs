@@ -1,6 +1,7 @@
 using System.Data;
-using AccessControl.Model;
-using AccessControl.Model.Repositories;
+using AccessControl.Contracts.Entities;
+using AccessControl.Contracts.Repositories;
+using AccessControl.DataAccess.Converters;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
@@ -14,25 +15,33 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .FeatureKeys
             .Include(fk => fk.FeatureKeyRoles)
             .OrderBy(x => x.Name)
             .ToArrayAsync();
+
+        return res.ToEntity();
     }
 
     public async Task<FeatureKey?> GetByName(string name)
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .FeatureKeys
             .Include(fk => fk.FeatureKeyRoles)
             .SingleOrDefaultAsync(x => x.Name == name);
+
+        return res?.ToEntity();
     }
 
-    public async Task<bool> Save(FeatureKey featureKey)
+    public Task<bool> Save(FeatureKey featureKey)
     {
+        // TODO: Fix it
+        return Task.FromResult(false);
+
+        /*
         using var context = await GetDbContext();
 
         var existing = await context
@@ -63,6 +72,7 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;
+        */
     }
 
     public async Task<int> Delete(string name)

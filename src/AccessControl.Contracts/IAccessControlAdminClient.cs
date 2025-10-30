@@ -1,3 +1,4 @@
+using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Requests;
 using Refit;
 
@@ -8,33 +9,33 @@ public interface IAccessControlAdminClient : IAccessControlClient
     #region FeatureKeyPermissionsController
 
     [Post("/api/feature-key-permissions/{fkName}")]
-    public Task<FeatureKeyDto> CreatePermissions(string fkName, [Body] PermissionsRequest request);
+    public Task<FeatureKey> CreatePermissions(string fkName, [Body] PermissionsRequest request);
 
     [Put("/api/feature-key-permissions/{fkName}/role/{roleName}/{permissions}")]
-    public Task<FeatureKeyDto> UpdatePermissions(string fkName, string roleName, Permissions permissions);
+    public Task<FeatureKey> UpdatePermissions(string fkName, string roleName, Permissions permissions);
 
     #endregion
 
     #region ResourcePermissionsController
 
     [Post("/api/resource-permissions/{id}")]
-    public Task<ResourceDto> CreateResourcePermissions(Guid id, [Body] PermissionsRequest request);
+    public Task<Resource> CreateResourcePermissions(Guid id, [Body] PermissionsRequest request);
 
     [Put("/api/resource-permissions/{id}/role/{roleName}/{permissions}")]
-    public Task<ResourceDto> UpdateResourcePermissions(Guid id, string roleName, Permissions permissions);
+    public Task<Resource> UpdateResourcePermissions(Guid id, string roleName, Permissions permissions);
 
     #endregion
 
     #region FeatureKeysController
 
     [Get("/api/feature-keys")]
-    public Task<FeatureKeyDto[]> GetAllFeatureKeys();
+    public Task<FeatureKey[]> GetAllFeatureKeys();
 
     [Get("/api/feature-keys/{name}")]
-    public Task<FeatureKeyDto> GetFeatureKeyByName(string name);
+    public Task<FeatureKey> GetFeatureKeyByName(string name);
 
     [Post("/api/feature-keys")]
-    public Task<FeatureKeyDto> CreateFeatureKey([Body] FeatureKeyRequest request);
+    public Task<FeatureKey> CreateFeatureKey([Body] FeatureKeyRequest request);
 
     [Delete("/api/feature-keys/{name}")]
     public Task<int> DeleteFeatureKey(string name);
@@ -44,32 +45,32 @@ public interface IAccessControlAdminClient : IAccessControlClient
     #region ResourcesController
 
     [Get("/api/resources")]
-    public Task<ResourceDto[]> GetAllResources();
+    public Task<Resource[]> GetAllResources();
 
     [Get("/api/resources/{id}")]
-    public Task<ResourceDto[]> GetResourceById(Guid id);
+    public Task<Resource[]> GetResourceById(Guid id);
 
     [Post("/api/resources")]
-    public Task<ResourceDto> CreateResource([Body] ResourceRequest request);
+    public Task<Resource> CreateResource([Body] ResourceRequest request);
 
     [Delete("/api/resources/{id}")]
-    public Task<ResourceDto[]> DeleteResource(Guid id);
+    public Task<Resource[]> DeleteResource(Guid id);
 
     #endregion
 
     #region RolesController
 
     [Get("/api/roles")]
-    public Task<RoleDto[]> GetAllRoles();
+    public Task<Role[]> GetAllRoles();
 
     [Get("/api/roles/{name}")]
-    public Task<RoleDto> GetRoleByName(string name);
+    public Task<Role> GetRoleByName(string name);
 
     [Post("/api/roles")]
-    public Task<RoleDto> CreateRole([Body] RoleRequest request);
+    public Task<Role> CreateRole([Body] Role request);
 
     [Put("/api/roles")]
-    public Task<RoleDto> UpdateRole([Body] RoleRequest request);
+    public Task<Role> UpdateRole([Body] Role request);
 
     [Delete("/api/roles/{name}")]
     public Task<int> DeleteRole(string name);
@@ -79,13 +80,13 @@ public interface IAccessControlAdminClient : IAccessControlClient
     #region UsersController
 
     [Post("/api/users")]
-    public Task<UserDto> CreateUser([Body] UserDto userDto);
+    public Task<User> CreateUser([Body] User userDto);
 
     [Get("/api/users")]
-    public Task<UserDto[]> GetAllUsers();
+    public Task<User[]> GetAllUsers();
 
     [Get("/api/users/{name}")]
-    public Task<UserDto> GetByName(string name);
+    public Task<User> GetByName(string name);
 
     [Delete("/api/users/{name}")]
     public Task<int> DeleteUser(string name);

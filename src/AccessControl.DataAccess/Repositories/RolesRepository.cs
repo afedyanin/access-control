@@ -1,5 +1,7 @@
-using AccessControl.Model;
-using AccessControl.Model.Repositories;
+using AccessControl.Contracts.Entities;
+using AccessControl.Contracts.Repositories;
+using AccessControl.DataAccess.Converters;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
@@ -14,29 +16,35 @@ internal class RolesRepository : RepositoryBase, IRolesRepository
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Roles
             .OrderBy(x => x.Name)
             .ToArrayAsync();
+
+        return res.ToEntity();
     }
 
     public async Task<Role?> GetByName(string name)
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Roles
             .SingleOrDefaultAsync(x => x.Name == name);
+
+        return res?.ToEntity();
     }
 
     public async Task<Role[]> GetByNames(string[] roleNames)
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Roles
             .Where(r => roleNames.Contains(r.Name))
             .ToArrayAsync();
+
+        return res.ToEntity();
     }
 
     public async Task<bool> Save(Role role)
@@ -53,7 +61,13 @@ internal class RolesRepository : RepositoryBase, IRolesRepository
         }
         else
         {
-            context.Roles.Add(role);
+            var dbo = new RoleDbo
+            {
+                Name = role.Name,
+                Description = role.Description
+            };
+
+            context.Roles.Add(dbo);
         }
 
         var savedRecords = await context.SaveChangesAsync();

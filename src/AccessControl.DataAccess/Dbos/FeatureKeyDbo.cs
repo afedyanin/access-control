@@ -1,20 +1,18 @@
-using AccessControl.Contracts;
+using AccessControl.Contracts.Entities;
 
-namespace AccessControl.Model;
+namespace AccessControl.DataAccess.Dbos;
 
-public class Resource
+internal class FeatureKeyDbo
 {
-    public Guid Id { get; set; }
-
     public required string Name { get; set; }
 
-    public List<Role> Roles { get; set; } = [];
+    public List<RoleDbo> Roles { get; set; } = [];
 
-    public List<ResourceRole> ResourceRoles { get; set; } = [];
+    public List<FeatureKeyRoleDbo> FeatureKeyRoles { get; set; } = [];
 
     public Permissions GetEffectivePermissions(string[] roleNames)
     {
-        var dict = ResourceRoles.ToDictionary(fkr => fkr.RoleName);
+        var dict = FeatureKeyRoles.ToDictionary(fkr => fkr.RoleName);
         var effective = Permissions.None;
 
         foreach (var roleName in roleNames)

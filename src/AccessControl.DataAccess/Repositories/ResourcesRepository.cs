@@ -1,5 +1,6 @@
-using AccessControl.Model;
-using AccessControl.Model.Repositories;
+using AccessControl.Contracts.Entities;
+using AccessControl.Contracts.Repositories;
+using AccessControl.DataAccess.Converters;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
@@ -14,25 +15,32 @@ internal class ResourcesRepository : RepositoryBase, IResourcesRepository
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Resources
             .Include(fk => fk.ResourceRoles)
             .OrderBy(x => x.Name)
             .ToArrayAsync();
+
+        return res.ToEntity();
     }
 
     public async Task<Resource?> GetById(Guid id)
     {
         using var context = await GetDbContext();
 
-        return await context
+        var res = await context
             .Resources
             .Include(fk => fk.ResourceRoles)
             .SingleOrDefaultAsync(x => x.Id == id);
+
+        return res?.ToEntity();
     }
 
-    public async Task<bool> Save(Resource resource)
+    public Task<bool> Save(Resource resource)
     {
+        // TODO: Fix it
+        return Task.FromResult(false);
+        /*
         using var context = await GetDbContext();
 
         var existing = await context
@@ -63,6 +71,7 @@ internal class ResourcesRepository : RepositoryBase, IResourcesRepository
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;
+        */
     }
 
     public async Task<int> Delete(Guid id)

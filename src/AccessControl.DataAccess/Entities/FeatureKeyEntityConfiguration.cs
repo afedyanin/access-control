@@ -1,12 +1,12 @@
-using AccessControl.Model;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal sealed class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<FeatureKey>
+internal sealed class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<FeatureKeyDbo>
 {
-    public void Configure(EntityTypeBuilder<FeatureKey> builder)
+    public void Configure(EntityTypeBuilder<FeatureKeyDbo> builder)
     {
         builder.ToTable("feature_keys");
 
@@ -19,7 +19,7 @@ internal sealed class FeatureKeyEntityConfiguration : IEntityTypeConfiguration<F
 
         builder.HasMany(e => e.Roles)
             .WithMany()
-            .UsingEntity<FeatureKeyRole>(
+            .UsingEntity<FeatureKeyRoleDbo>(
                 j =>
                 {
                     j.ToTable("feature_key_role");

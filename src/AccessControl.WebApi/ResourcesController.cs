@@ -1,6 +1,6 @@
+using AccessControl.Contracts.Repositories;
 using AccessControl.Contracts.Requests;
 using AccessControl.Model;
-using AccessControl.Model.Repositories;
 using AccessControl.WebApi.Authorization;
 using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;

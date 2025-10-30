@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AccessControl.Contracts\AccessControl.Contracts.csproj" />
-    <ProjectReference Include="..\AccessControl.Model\AccessControl.Model.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-namespace AccessControl.Contracts;
+namespace AccessControl.Contracts.Entities;
 
 [Flags]
 public enum Permissions

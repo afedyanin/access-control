@@ -1,12 +1,12 @@
-using AccessControl.Model;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccessControl.DataAccess.Entities;
 
-internal sealed class RoleEntityConfiguration : IEntityTypeConfiguration<Role>
+internal sealed class RoleEntityConfiguration : IEntityTypeConfiguration<RoleDbo>
 {
-    public void Configure(EntityTypeBuilder<Role> builder)
+    public void Configure(EntityTypeBuilder<RoleDbo> builder)
     {
         builder.ToTable("roles");
 

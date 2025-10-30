@@ -1,6 +1,6 @@
-namespace AccessControl.Model;
+namespace AccessControl.DataAccess.Dbos;
 
-public class Role
+internal class RoleDbo
 {
     public required string Name { get; set; }
 

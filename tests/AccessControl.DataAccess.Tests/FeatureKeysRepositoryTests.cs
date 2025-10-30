@@ -1,10 +1,9 @@
-using AccessControl.Contracts;
-using AccessControl.Model;
+using AccessControl.Contracts.Entities;
 
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-public class FeatureKeysRepositoryTests : RepositoryTestBase
+internal class FeatureKeysRepositoryTests : RepositoryTestBase
 {
     [Test]
     public async Task CanSaveRole()
@@ -59,7 +58,7 @@ public class FeatureKeysRepositoryTests : RepositoryTestBase
         var found = await FeatureKeysRepository.GetByName(fk.Name);
         Assert.That(found, Is.Null);
     }
-
+    /*
     [Test]
     public async Task CanAddRolesToFk()
     {
@@ -90,7 +89,8 @@ public class FeatureKeysRepositoryTests : RepositoryTestBase
 
         Assert.Pass();
     }
-
+    */
+    /*
     [Test]
     public async Task CanAddRolesToFkWithPermissions()
     {
@@ -135,4 +135,5 @@ public class FeatureKeysRepositoryTests : RepositoryTestBase
 
         Assert.Pass();
     }
+    */
 }

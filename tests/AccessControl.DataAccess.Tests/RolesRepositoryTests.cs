@@ -1,9 +1,9 @@
-using AccessControl.Model;
+using AccessControl.Contracts.Entities;
 
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-public class RolesRepositoryTests : RepositoryTestBase
+internal class RolesRepositoryTests : RepositoryTestBase
 {
     [TestCase("Admin")]
     [TestCase("Developer")]

@@ -1,3 +1,4 @@
+using AccessControl.Contracts.Entities;
 using Refit;
 
 namespace AccessControl.Contracts;
