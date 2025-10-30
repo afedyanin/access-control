@@ -1,8 +1,6 @@
+using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Repositories;
-using AccessControl.Contracts.Requests;
-using AccessControl.Model;
 using AccessControl.WebApi.Authorization;
-using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
@@ -19,11 +17,31 @@ public class RolesController : ControllerBase
         _roleRepository = roleRepository;
     }
 
+    [HttpPost()]
+    public async Task<IActionResult> CreateRole(Role role)
+    {
+        var saved = await _roleRepository.Save(role);
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save Role={role}");
+        }
+
+        var savedRole = await _roleRepository.GetByName(role.Name);
+
+        if (savedRole == null)
+        {
+            return NotFound($"Cannot find role by Name={role.Name}");
+        }
+
+        return Ok(savedRole);
+    }
+
     [HttpGet()]
     public async Task<IActionResult> GetAllRoles()
     {
         var roles = await _roleRepository.GetAll();
-        return Ok(roles.ToDto());
+        return Ok(roles ?? []);
     }
 
     [HttpGet("{name}")]
@@ -33,53 +51,11 @@ public class RolesController : ControllerBase
 
         if (role == null)
         {
-            return NotFound();
+            return NotFound($"Cannot find role by Name={name}");
         }
 
-        return Ok(role.ToDto());
+        return Ok(role);
     }
-
-    [HttpPost()]
-    public async Task<IActionResult> CreateRole([FromBody] RoleRequest request)
-    {
-        var role = new Role
-        {
-            Name = request.Name,
-            Description = request.Description,
-        };
-
-        var saved = await _roleRepository.Save(role);
-
-        if (!saved)
-        {
-            return BadRequest();
-        }
-
-        return Ok(role.ToDto());
-    }
-
-    [HttpPut()]
-    public async Task<IActionResult> UpdateRole([FromBody] RoleRequest request)
-    {
-        var found = await _roleRepository.GetByName(request.Name);
-
-        if (found == null)
-        {
-            return NotFound();
-        }
-
-        found.Description = request.Description;
-
-        var saved = await _roleRepository.Save(found);
-
-        if (!saved)
-        {
-            return BadRequest();
-        }
-
-        return Ok(found.ToDto());
-    }
-
 
     [HttpDelete("{name}")]
     public async Task<IActionResult> DeleteRole(string name)

@@ -8,12 +8,12 @@ public abstract class ApiClientBase
 {
     private readonly IServiceProvider _serviceProvider;
 
-    protected readonly IAccessControlAdminClient AdminClient;
+    protected readonly IAccessControlClient AdminClient;
     protected ApiClientBase()
     {
         var services = new ServiceCollection();
 
-        services.AddRefitClient<IAccessControlAdminClient>()
+        services.AddRefitClient<IAccessControlClient>()
                .ConfigureHttpClient(c =>
                {
                    c.BaseAddress = new Uri(ApiConsts.BaseUrl);
@@ -21,6 +21,6 @@ public abstract class ApiClientBase
                });
 
         _serviceProvider = services.BuildServiceProvider();
-        AdminClient = _serviceProvider.GetRequiredService<IAccessControlAdminClient>();
+        AdminClient = _serviceProvider.GetRequiredService<IAccessControlClient>();
     }
 }

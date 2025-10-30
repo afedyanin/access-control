@@ -1,6 +1,7 @@
 using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Repositories;
 using AccessControl.DataAccess.Converters;
+using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
@@ -36,42 +37,80 @@ internal class ResourcesRepository : RepositoryBase, IResourcesRepository
         return res?.ToEntity();
     }
 
-    public Task<bool> Save(Resource resource)
+    public async Task<bool> Save(Resource resource)
     {
-        // TODO: Fix it
-        return Task.FromResult(false);
-        /*
         using var context = await GetDbContext();
 
-        var existing = await context
+        var rolePermissionsDict = resource.RolePermissions.ToDictionary(rp => rp.RoleName);
+
+        var rolesToSave = await context
+            .Roles
+            .Where(r => rolePermissionsDict.Keys.Contains(r.Name))
+            .ToArrayAsync();
+
+        var existingRes = await context
             .Resources
+            .Include(fk => fk.ResourceRoles)
             .FirstOrDefaultAsync(p => p.Id == resource.Id);
 
-        if (existing != null)
+        if (existingRes == null)
         {
-            existing.Roles.Clear();
-            foreach (var role in resource.Roles)
+            var newRes = new ResourceDbo
             {
-                context.Attach(role);
-                existing.Roles.Add(role);
+                Id = resource.Id,
+                Name = resource.Name,
+            };
+
+            foreach (var role in rolesToSave)
+            {
+                if (!rolePermissionsDict.TryGetValue(role.Name, out var rolePermissions))
+                {
+                    continue;
+                }
+
+                var resRole = new ResourceRoleDbo
+                {
+                    Resource = newRes,
+                    ResourceId = newRes.Id,
+                    Role = role,
+                    RoleName = role.Name,
+                    Permissions = rolePermissions.Permissions,
+                };
+
+                newRes.Roles.Add(role);
+                newRes.ResourceRoles.Add(resRole);
             }
 
-            existing.ResourceRoles.Clear();
-            foreach (var rRole in resource.ResourceRoles)
-            {
-                context.Attach(rRole.Role);
-                existing.ResourceRoles.Add(rRole);
-            }
+            context.Resources.Add(newRes);
         }
         else
         {
-            context.Resources.Add(resource);
+            existingRes.ResourceRoles.RemoveAll(r => !rolesToSave.Contains(r.Role));
+            var rolesToAdd = rolesToSave.Where(r => !existingRes.Roles.Contains(r));
+
+            foreach (var role in rolesToAdd)
+            {
+                if (!rolePermissionsDict.TryGetValue(role.Name, out var rolePermissions))
+                {
+                    continue;
+                }
+
+                var resRole = new ResourceRoleDbo
+                {
+                    Resource = existingRes,
+                    ResourceId = existingRes.Id,
+                    Role = role,
+                    RoleName = role.Name,
+                    Permissions = rolePermissions.Permissions,
+                };
+
+                existingRes.ResourceRoles.Add(resRole);
+            }
         }
 
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;
-        */
     }
 
     public async Task<int> Delete(Guid id)

@@ -1,6 +1,6 @@
 namespace AccessControl.Contracts.Entities;
 
-public class User
+public record class User
 {
     public required string Name { get; init; }
 

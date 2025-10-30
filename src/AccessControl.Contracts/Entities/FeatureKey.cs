@@ -1,6 +1,6 @@
 namespace AccessControl.Contracts.Entities;
 
-public class FeatureKey
+public record class FeatureKey
 {
     public required string Name { get; init; }
 

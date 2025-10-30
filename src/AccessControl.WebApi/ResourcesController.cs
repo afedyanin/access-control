@@ -1,8 +1,6 @@
+using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Repositories;
-using AccessControl.Contracts.Requests;
-using AccessControl.Model;
 using AccessControl.WebApi.Authorization;
-using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
@@ -21,12 +19,32 @@ public class ResourcesController : ControllerBase
         _resourcesRepository = resourcesRepository;
     }
 
+    [HttpPost()]
+    public async Task<IActionResult> CreateResource(Resource resource)
+    {
+        var saved = await _resourcesRepository.Save(resource);
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save Resource={resource}");
+        }
+
+        var savedRes = await _resourcesRepository.GetById(resource.Id);
+
+        if (savedRes == null)
+        {
+            return NotFound($"Cannot find resource by Id={resource.Id}");
+        }
+
+        return Ok(savedRes);
+    }
+
     [HttpGet()]
     public async Task<IActionResult> GetAllResources()
     {
         var resources = await _resourcesRepository.GetAll();
 
-        return Ok(resources.ToDto());
+        return Ok(resources ?? []);
     }
 
     [HttpGet("{id:guid}")]
@@ -36,31 +54,10 @@ public class ResourcesController : ControllerBase
 
         if (resource == null)
         {
-            return NotFound();
+            return NotFound($"Cannot find resource key by Id={id}");
         }
 
-        return Ok(resource.ToDto());
-    }
-
-    [HttpPost()]
-    public async Task<IActionResult> CreateResource([FromBody] ResourceRequest request)
-    {
-        // TODO: Check if already exists
-
-        var resource = new Resource
-        {
-            Id = request.Id,
-            Name = request.Name,
-        };
-
-        var saved = await _resourcesRepository.Save(resource);
-
-        if (!saved)
-        {
-            return BadRequest();
-        }
-
-        return Ok(resource.ToDto());
+        return Ok(resource);
     }
 
     [HttpDelete("{id:guid}")]

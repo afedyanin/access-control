@@ -1,7 +1,6 @@
-using AccessControl.Contracts;
+using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Repositories;
 using AccessControl.WebApi.Authorization;
-using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
@@ -21,9 +20,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<IActionResult> CreateUser(UserDto user)
+    public async Task<IActionResult> CreateUser(User user)
     {
-        var saved = await _usersRepository.Save(user.FromDto());
+        var saved = await _usersRepository.Save(user);
 
         if (!saved)
         {
@@ -37,7 +36,7 @@ public class UsersController : ControllerBase
             return NotFound($"Cannot find user by Name={user.Name}");
         }
 
-        return Ok(savedUser.ToDto());
+        return Ok(savedUser);
     }
 
     [HttpGet()]
@@ -45,11 +44,11 @@ public class UsersController : ControllerBase
     {
         var users = await _usersRepository.GetAll();
 
-        return Ok(users.ToDto());
+        return Ok(users ?? []);
     }
 
     [HttpGet("{name}")]
-    public async Task<IActionResult> GetByName(string name)
+    public async Task<IActionResult> GetUserByName(string name)
     {
         var user = await _usersRepository.GetByName(name);
 
@@ -58,7 +57,7 @@ public class UsersController : ControllerBase
             return NotFound($"Cannot find user by Name={name}");
         }
 
-        return Ok(user.ToDto());
+        return Ok(user);
     }
 
     [HttpDelete("{name}")]

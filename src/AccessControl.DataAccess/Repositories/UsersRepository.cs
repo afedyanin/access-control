@@ -64,6 +64,7 @@ internal class UsersRepository : RepositoryBase, IUsersRepository
         }
         else
         {
+            existingUser.Email = user.Email;
             existingUser.Roles.RemoveAll(r => !rolesToSave.Contains(r));
             existingUser.Roles.AddRange(rolesToSave.Where(r => !existingUser.Roles.Contains(r)));
         }

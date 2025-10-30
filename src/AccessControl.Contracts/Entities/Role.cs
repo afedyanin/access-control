@@ -1,5 +1,5 @@
 namespace AccessControl.Contracts.Entities;
-public class Role
+public record class Role
 {
     public required string Name { get; init; }
 

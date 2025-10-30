@@ -1,5 +1,6 @@
 namespace AccessControl.Contracts.Entities;
-public class Resource
+
+public record class Resource
 {
     public Guid Id { get; init; }
 

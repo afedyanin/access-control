@@ -6,7 +6,7 @@ namespace AccessControl.DataAccess.Tests;
 internal class FeatureKeysRepositoryTests : RepositoryTestBase
 {
     [Test]
-    public async Task CanSaveRole()
+    public async Task CanSaveFeatureKeyWithoutPermissions()
     {
         var fk = new FeatureKey()
         {
@@ -18,7 +18,7 @@ internal class FeatureKeysRepositoryTests : RepositoryTestBase
     }
 
     [Test]
-    public async Task CanGetRole()
+    public async Task CanGetFeatureKey()
     {
         var fk = new FeatureKey()
         {
@@ -36,14 +36,14 @@ internal class FeatureKeysRepositoryTests : RepositoryTestBase
     }
 
     [Test]
-    public async Task CanGetAllRoles()
+    public async Task CanGetAllFeatureKeys()
     {
         var fkeys = await FeatureKeysRepository.GetAll();
         Assert.That(fkeys, Is.Not.Null);
     }
 
     [Test]
-    public async Task CanDeleteRoles()
+    public async Task CanDeleteFeatureKey()
     {
         var fk = new FeatureKey()
         {
@@ -58,82 +58,33 @@ internal class FeatureKeysRepositoryTests : RepositoryTestBase
         var found = await FeatureKeysRepository.GetByName(fk.Name);
         Assert.That(found, Is.Null);
     }
-    /*
-    [Test]
-    public async Task CanAddRolesToFk()
+
+    [TestCase("Admin", Permissions.Full)]
+    [TestCase("Developer", Permissions.ReadWrite)]
+    public async Task CanSaveFeatureKeyWithPermissions(string roleName, Permissions permissions)
     {
+        var rp = new RolePermissions
+        {
+            RoleName = roleName,
+            Permissions = permissions
+        };
+
         var fk = new FeatureKey()
         {
-            Name = $"Some FK with roles {Guid.NewGuid()}",
+            Name = $"FK with permissions",
+            RolePermissions = [rp],
         };
 
         _ = await FeatureKeysRepository.Save(fk);
 
-        var role1 = new Role()
+        var savedFk = await FeatureKeysRepository.GetByName(fk.Name);
+
+        Assert.That(savedFk, Is.Not.Null);
+
+        Assert.Multiple(() =>
         {
-            Name = $"Role01 FK {Guid.NewGuid()}",
-        };
-        _ = await RolesRepository.Save(role1);
-
-        var role2 = new Role()
-        {
-            Name = $"Role02 FK {Guid.NewGuid()}",
-        };
-
-        _ = await RolesRepository.Save(role2);
-
-        fk.Roles.Add(role1);
-        fk.Roles.Add(role2);
-        _ = await FeatureKeysRepository.Save(fk);
-
-
-        Assert.Pass();
+            Assert.That(savedFk.RolePermissions.Any(perm => perm.RoleName == rp.RoleName), Is.True);
+            Assert.That(savedFk.RolePermissions.Single(perm => perm.RoleName == rp.RoleName).Permissions, Is.EqualTo(rp.Permissions));
+        });
     }
-    */
-    /*
-    [Test]
-    public async Task CanAddRolesToFkWithPermissions()
-    {
-        var fk = new FeatureKey()
-        {
-            Name = $"Some FK with roles {Guid.NewGuid()}",
-        };
-
-        _ = await FeatureKeysRepository.Save(fk);
-
-        var role1 = new Role()
-        {
-            Name = $"Role01 FK {Guid.NewGuid()}",
-        };
-        _ = await RolesRepository.Save(role1);
-
-        var role2 = new Role()
-        {
-            Name = $"Role02 FK {Guid.NewGuid()}",
-        };
-
-        _ = await RolesRepository.Save(role2);
-
-        var fkar1 = new FeatureKeyRole
-        {
-            FeatureKey = fk,
-            Role = role1,
-            Permissions = Permissions.Execute,
-        };
-
-        var fkar2 = new FeatureKeyRole
-        {
-            FeatureKey = fk,
-            Role = role2,
-            Permissions = Permissions.Full,
-        };
-
-        fk.FeatureKeyRoles.Add(fkar1);
-        fk.FeatureKeyRoles.Add(fkar2);
-
-        _ = await FeatureKeysRepository.Save(fk);
-
-        Assert.Pass();
-    }
-    */
 }

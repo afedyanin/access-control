@@ -1,8 +1,6 @@
+using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Repositories;
-using AccessControl.Contracts.Requests;
-using AccessControl.Model;
 using AccessControl.WebApi.Authorization;
-using AccessControl.WebApi.Converters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.WebApi;
@@ -21,12 +19,32 @@ public class FeatureKeysController : ControllerBase
         _featureKeyRepository = featureKeyRepository;
     }
 
+    [HttpPost()]
+    public async Task<IActionResult> CreateFeatureKey(FeatureKey featureKey)
+    {
+        var saved = await _featureKeyRepository.Save(featureKey);
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save FeatureKey={featureKey}");
+        }
+
+        var savedFk = await _featureKeyRepository.GetByName(featureKey.Name);
+
+        if (savedFk == null)
+        {
+            return NotFound($"Cannot find feature key by Name={featureKey.Name}");
+        }
+
+        return Ok(savedFk);
+    }
+
     [HttpGet()]
     public async Task<IActionResult> GetAllFeatureKeys()
     {
         var featureKeys = await _featureKeyRepository.GetAll();
 
-        return Ok(featureKeys.ToDto());
+        return Ok(featureKeys ?? []);
     }
 
     [HttpGet("{name}")]
@@ -36,28 +54,10 @@ public class FeatureKeysController : ControllerBase
 
         if (featureKey == null)
         {
-            return NotFound();
+            return NotFound($"Cannot find feature key by Name={name}");
         }
 
-        return Ok(featureKey.ToDto());
-    }
-
-    [HttpPost()]
-    public async Task<IActionResult> CreateFeatureKey([FromBody] FeatureKeyRequest request)
-    {
-        var featureKey = new FeatureKey
-        {
-            Name = request.Name,
-        };
-
-        var saved = await _featureKeyRepository.Save(featureKey);
-
-        if (!saved)
-        {
-            return BadRequest();
-        }
-
-        return Ok(featureKey.ToDto());
+        return Ok(featureKey);
     }
 
     [HttpDelete("{name}")]

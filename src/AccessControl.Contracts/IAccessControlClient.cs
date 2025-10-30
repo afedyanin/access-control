@@ -5,23 +5,61 @@ namespace AccessControl.Contracts;
 
 public interface IAccessControlClient
 {
-    #region FeatureKeyPermissionsController
+    // Roles API
 
-    [Get("/api/feature-key-permissions/all")]
-    public Task<Dictionary<string, Permissions>> GetAllFeatureKeysPermissions([Query] string[] roleNames);
+    [Get("/api/roles")]
+    public Task<Role[]> GetAllRoles();
 
-    [Get("/api/feature-key-permissions/{fkName}")]
-    public Task<Permissions> GetEffectivePermissions(string fkName, [Query] string[] roleNames);
+    [Get("/api/roles/{name}")]
+    public Task<Role> GetRoleByName(string name);
 
-    #endregion
+    [Post("/api/roles")]
+    public Task<Role> CreateRole(Role request);
 
-    #region ResourcePermissionsController
+    [Delete("/api/roles/{name}")]
+    public Task<int> DeleteRole(string name);
 
-    [Get("/api/resource-permissions/all")]
-    public Task<Dictionary<string, Permissions>> GetAllResourcesPermissions([Query] string[] roleNames);
+    // Users API
 
-    [Get("/api/resource-permissions/{id}")]
-    public Task<Permissions> GetEffectiveResourcePermissions(Guid id, [Query] string[] roleNames);
+    [Post("/api/users")]
+    public Task<User> CreateUser(User userDto);
 
-    #endregion
+    [Get("/api/users")]
+    public Task<User[]> GetAllUsers();
+
+    [Get("/api/users/{name}")]
+    public Task<User> GetUserByName(string name);
+
+    [Delete("/api/users/{name}")]
+    public Task<int> DeleteUser(string name);
+
+
+    // Feature keys API
+
+    [Get("/api/feature-keys")]
+    public Task<FeatureKey[]> GetAllFeatureKeys();
+
+    [Get("/api/feature-keys/{name}")]
+    public Task<FeatureKey> GetFeatureKeyByName(string name);
+
+    [Post("/api/feature-keys")]
+    public Task<FeatureKey> CreateFeatureKey(FeatureKey featureKey);
+
+    [Delete("/api/feature-keys/{name}")]
+    public Task<int> DeleteFeatureKey(string name);
+
+
+    // Resources API
+
+    [Get("/api/resources")]
+    public Task<Resource[]> GetAllResources();
+
+    [Get("/api/resources/{id}")]
+    public Task<Resource> GetResourceById(Guid id);
+
+    [Post("/api/resources")]
+    public Task<Resource> CreateResource(Resource resource);
+
+    [Delete("/api/resources/{id}")]
+    public Task<Resource[]> DeleteResource(Guid id);
 }
