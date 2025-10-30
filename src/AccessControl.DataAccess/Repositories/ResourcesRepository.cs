@@ -85,10 +85,8 @@ internal class ResourcesRepository : RepositoryBase, IResourcesRepository
         }
         else
         {
-            existingRes.ResourceRoles.RemoveAll(r => !rolesToSave.Contains(r.Role));
-            var rolesToAdd = rolesToSave.Where(r => !existingRes.Roles.Contains(r));
-
-            foreach (var role in rolesToAdd)
+            existingRes.ResourceRoles.Clear();
+            foreach (var role in rolesToSave)
             {
                 if (!rolePermissionsDict.TryGetValue(role.Name, out var rolePermissions))
                 {

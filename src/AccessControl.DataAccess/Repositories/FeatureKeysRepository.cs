@@ -83,10 +83,8 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
         }
         else
         {
-            existingFk.FeatureKeyRoles.RemoveAll(r => !rolesToSave.Contains(r.Role));
-            var rolesToAdd = rolesToSave.Where(r => !existingFk.Roles.Contains(r));
-
-            foreach (var role in rolesToAdd)
+            existingFk.FeatureKeyRoles.Clear();
+            foreach (var role in rolesToSave)
             {
                 if (!rolePermissionsDict.TryGetValue(role.Name, out var rolePermissions))
                 {
