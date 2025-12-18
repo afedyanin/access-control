@@ -101,22 +101,33 @@ public partial class FeatureKeys
             return;
         }
 
-        RowsGrid.Add(new FeatureKeyRolePermissionsModel
+        if (string.IsNullOrWhiteSpace(model.FeatureKey))
         {
-            FeatureKey = model.FeatureKey,
-            RoleName = model.RoleName
-        });
+            return;
+        }
+
+        var saved = false;
+
+        foreach (var role in model.SelectedRoles ?? [])
+        {
+            RowsGrid.Add(new FeatureKeyRolePermissionsModel
+            {
+                FeatureKey = model.FeatureKey,
+                RoleName = role
+            });
+
+            saved = true;
+        }
 
         if (_allFeatureKeys.FirstOrDefault(fk => fk == model.FeatureKey) == null)
         {
             _allFeatureKeys.Add(model.FeatureKey);
         }
 
-        var saved = true;
-
         if (saved)
         {
-            ToastService.ShowSuccess($"FK={model.FeatureKey} and Role={model.RoleName} selected.");
+            var roles = string.Join(',', model.SelectedRoles ?? []);
+            ToastService.ShowSuccess($"FK={model.FeatureKey} and Role(s)={roles} selected.");
         }
 
         /*

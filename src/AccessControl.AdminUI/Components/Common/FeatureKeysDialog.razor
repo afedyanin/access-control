@@ -12,13 +12,15 @@
                     @bind-Value="@Content.FeatureKey"
                     style="width: 100%;"
                     Immediate ImmediateDelay="100" />
-
+    <br/>
+    <br/>
     <FluentSelect TOption="string"
-                  Label="Role"
-                  Items="@Content.AllRoles"
-                  OptionValue="@(p => p)"
-                  OptionText="@(p => p)"
-                  style="width: 100%;"
-                  @bind-SelectedOption="@Content.RoleName" />
-
+                   Items="@Content.AllRoles"
+                   Label="Roles:"
+                   Multiple="true"
+                   OptionValue="@(p => p)"
+                   OptionText="@(p => p)"
+                   Height="300px"
+                   Width="15rem"
+                   @bind-SelectedOptions="@Content.SelectedRoles"/>
 </FluentDialogBody>

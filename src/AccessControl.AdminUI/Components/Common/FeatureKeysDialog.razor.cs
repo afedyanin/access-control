@@ -12,6 +12,7 @@ public partial class FeatureKeysDialog
     protected override async Task OnInitializedAsync()
     {
         Content.RoleName = Content.AllRoles[0];
+        Content.SelectedRoles = [];
         await base.OnInitializedAsync();
     }
 }
