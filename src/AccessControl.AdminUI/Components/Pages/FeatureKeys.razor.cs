@@ -135,14 +135,22 @@ public partial class FeatureKeys
         */
     }
 
-    private async Task SubmitChangesAsync()
-    {
-        ToastService.ShowSuccess("All cahnges saved!");
-    }
-
     private async Task DiscardChangesAsync()
     {
-        ToastService.ShowSuccess("All changes discarted!");
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            $"Discard all changes?",
+            "Yes",
+            "No",
+            $"All cahnges will be lost!");
+
+        var result = await confirmation.Result;
+
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        ToastService.ShowSuccess("All changes discarded!");
     }
 
     private async Task HandleDeleteAction(FeatureKeyRolePermissionsModel model)
@@ -167,6 +175,24 @@ public partial class FeatureKeys
             RowsGrid.Remove(found);
             ToastService.ShowWarning($"{model.FeatureKey}:{model.RoleName} deleted!");
         }
+    }
+
+    private async Task SubmitChangesAsync()
+    {
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            $"Save all changes?",
+            "Yes",
+            "No",
+            $"Saving permissions");
+
+        var result = await confirmation.Result;
+
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        ToastService.ShowSuccess("All cahnges saved!");
     }
 
 
