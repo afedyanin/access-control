@@ -60,4 +60,21 @@ public class FeatureKeyChangeTrackerTests
         Assert.Pass();
     }
 
+    public void AnAddNewFeatureKey()
+    {
+        var keysDict = new Dictionary<string, Dictionary<string, Permissions>>();
+
+        foreach (var key in _allKeys)
+        {
+            keysDict.TryGetValue(key.Name, out var rolesDict);
+
+            rolesDict ??= [];
+
+            foreach(var role in key.RolePermissions)
+            {
+
+            }
+        }
+    }
+
 }
