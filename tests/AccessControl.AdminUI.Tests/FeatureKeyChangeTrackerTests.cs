@@ -43,38 +43,26 @@ public class FeatureKeyChangeTrackerTests
         },
     ];
 
-    [Test]
-    public void CanCreateFlatPermissions()
+    [TestCase("FK_new", "role01", Permissions.Read | Permissions.Write, true)]
+    [TestCase("fk02", "role02", Permissions.None, false)]
+    public void CanAddNewKey(string featureKey, string role, Permissions permission, bool expected)
     {
-        var res = _allKeys
-            .SelectMany(k => k.RolePermissions,
-            (key, permissions) =>
-                new PermissionItem
-                {
-                    KeyName = key.Name,
-                    RoleName = permissions.RoleName,
-                    Permissions = permissions.Permissions
-                });
+        var tracker = new FeatureKeyChangeTracker(_allKeys);
 
-        Console.WriteLine(string.Join("\n", res));
-        Assert.Pass();
+        var res = tracker.TryAdd(featureKey, role, permission);
+        Assert.That(res, Is.EqualTo(expected));
     }
 
-    public void AnAddNewFeatureKey()
+    [TestCase("FK_new", "role01", Permissions.Read | Permissions.Write, false)]
+    [TestCase("fk02", "role02", Permissions.None, true)]
+    public void CanUpdateKey(string featureKey, string role, Permissions permission, bool expected)
     {
-        var keysDict = new Dictionary<string, Dictionary<string, Permissions>>();
+        var tracker = new FeatureKeyChangeTracker(_allKeys);
 
-        foreach (var key in _allKeys)
-        {
-            keysDict.TryGetValue(key.Name, out var rolesDict);
-
-            rolesDict ??= [];
-
-            foreach(var role in key.RolePermissions)
-            {
-
-            }
-        }
+        var res = tracker.TryUpdate(featureKey, role, permission);
+        Assert.That(res, Is.EqualTo(expected));
     }
+
+    // TODO: Full unit test public methods for FeatureKeyChangeTracker
 
 }
