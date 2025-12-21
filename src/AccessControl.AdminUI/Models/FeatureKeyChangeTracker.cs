@@ -4,16 +4,19 @@ namespace AccessControl.AdminUI.Models;
 
 public class FeatureKeyChangeTracker
 {
-    private readonly FeatureKey[] _allKeys = [];
-    private readonly Dictionary<string, Dictionary<string, Permissions>> _keysDict;
+    private Dictionary<string, Dictionary<string, Permissions>> _keysDict = [];
 
     private readonly HashSet<string> _changedKeys = [];
     private readonly HashSet<string> _deletedKeys = [];
 
     public FeatureKeyChangeTracker(FeatureKey[] allKeys)
     {
-        _allKeys = allKeys;
-        _keysDict = CreateStructuredPermissions(_allKeys);
+        Reset(allKeys);
+    }
+
+    public void Reset(FeatureKey[] allKeys)
+    {
+        _keysDict = CreateStructuredPermissions(allKeys);
     }
 
     public bool TryAdd(string featureKey, string roleName, Permissions permissions)
@@ -122,9 +125,11 @@ public class FeatureKeyChangeTracker
 
     // TODO: call delete API
     public IEnumerable<string> GetDeletedKeys()
-        => _deletedKeys;
+    {
+        return _deletedKeys.Where(key => !_keysDict.Keys.Contains(key));
+    }
 
-    private static Dictionary<string, Dictionary<string, Permissions>> CreateStructuredPermissions(FeatureKey[] allKeys)
+    internal static Dictionary<string, Dictionary<string, Permissions>> CreateStructuredPermissions(FeatureKey[] allKeys)
     {
         var keysDict = new Dictionary<string, Dictionary<string, Permissions>>();
 
@@ -138,6 +143,8 @@ public class FeatureKeyChangeTracker
             {
                 rolesDict[rp.RoleName] = rp.Permissions;
             }
+
+            keysDict[key.Name] = rolesDict;
         }
 
         return keysDict;

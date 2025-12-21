@@ -1,4 +1,5 @@
 using AccessControl.Contracts.Entities;
+using AccessControl.Contracts.Reqests;
 using Refit;
 
 namespace AccessControl.Contracts;
@@ -44,6 +45,9 @@ public interface IAccessControlClient
 
     [Post("/api/feature-keys")]
     public Task<FeatureKey> CreateFeatureKey(FeatureKey featureKey);
+
+    [Put("/api/feature-keys")]
+    public Task<FeatureKey> Update(FeatureKeysUpdateRequest request);
 
     [Delete("/api/feature-keys/{name}")]
     public Task<int> DeleteFeatureKey(string name);

@@ -14,4 +14,8 @@
   <ItemGroup>
     <ProjectReference Include="..\AccessControl.Contracts\AccessControl.Contracts.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AccessControl.AdminUI.Tests"/>
+  </ItemGroup>
 </Project>

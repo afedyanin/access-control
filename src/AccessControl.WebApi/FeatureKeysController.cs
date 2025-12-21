@@ -1,5 +1,6 @@
 using AccessControl.Contracts.Entities;
 using AccessControl.Contracts.Repositories;
+using AccessControl.Contracts.Reqests;
 using AccessControl.WebApi.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +39,20 @@ public class FeatureKeysController : ControllerBase
 
         return Ok(savedFk);
     }
+
+    [HttpPut()]
+    public async Task<IActionResult> Update(FeatureKeysUpdateRequest request)
+    {
+        var saved = await _featureKeyRepository.Update(request.ChangedKeys, request.DeletedKeys);
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save FeatureKeysUpdateRequest={request}");
+        }
+
+        return Ok();
+    }
+
 
     [HttpGet()]
     public async Task<IActionResult> GetAllFeatureKeys()

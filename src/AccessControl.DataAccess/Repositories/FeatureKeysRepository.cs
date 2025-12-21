@@ -40,6 +40,47 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
     {
         using var context = await GetDbContext();
 
+        await SaveInternal(featureKey, context);
+
+        var savedRecords = await context.SaveChangesAsync();
+
+        return savedRecords > 0;
+    }
+
+    public async Task<int> Delete(string name)
+    {
+        using var context = await GetDbContext();
+
+        return await context.FeatureKeys
+            .Where(s => s.Name == name)
+            .ExecuteDeleteAsync();
+    }
+
+    public async Task<bool> Update(FeatureKey[] changedKeys, string[] deletedKeys)
+    {
+        if (changedKeys.Length <= 0 && deletedKeys.Length <= 0)
+        {
+            return true;
+        }
+
+        using var context = await GetDbContext();
+
+        foreach (var featureKey in changedKeys)
+        {
+            await SaveInternal(featureKey, context);
+        }
+
+        var savedRows = await context.SaveChangesAsync();
+
+        var deletedRows = await context.FeatureKeys
+            .Where(s => deletedKeys.Contains(s.Name))
+            .ExecuteDeleteAsync();
+
+        return (savedRows > 0) || (deletedRows > 0);
+    }
+
+    private async Task SaveInternal(FeatureKey featureKey, AccessControlDbContext context)
+    {
         var rolePermissionsDict = featureKey.RolePermissions.ToDictionary(rp => rp.RoleName);
 
         var rolesToSave = await context
@@ -103,18 +144,5 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
                 existingFk.FeatureKeyRoles.Add(fkRole);
             }
         }
-
-        var savedRecords = await context.SaveChangesAsync();
-
-        return savedRecords > 0;
-    }
-
-    public async Task<int> Delete(string name)
-    {
-        using var context = await GetDbContext();
-
-        return await context.FeatureKeys
-            .Where(s => s.Name == name)
-            .ExecuteDeleteAsync();
     }
 }

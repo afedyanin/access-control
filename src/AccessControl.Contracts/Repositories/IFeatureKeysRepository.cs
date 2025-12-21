@@ -10,5 +10,7 @@ public interface IFeatureKeysRepository
 
     public Task<bool> Save(FeatureKey featureKey);
 
+    public Task<bool> Update(FeatureKey[] changedKeys, string[] deletedKeys);
+
     public Task<int> Delete(string name);
 }
