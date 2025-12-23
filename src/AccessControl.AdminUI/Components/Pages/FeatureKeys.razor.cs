@@ -1,5 +1,7 @@
 using AccessControl.AdminUI.Components.Common;
 using AccessControl.AdminUI.Models;
+using AccessControl.Contracts;
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace AccessControl.AdminUI.Components.Pages;
@@ -14,14 +16,7 @@ public partial class FeatureKeys
         "FK 004",
     ];
 
-    private static readonly List<string> AllRoles =
-    [
-        "Role 001",
-        "Role 002",
-        "Role 003",
-        "Role 004",
-    ];
-
+    private string[] _allRoles = [];
 
     private readonly List<FeatureKeyRolePermissionsModel> _rowsGrid = new()
     {
@@ -61,13 +56,25 @@ public partial class FeatureKeys
     };
 
 
-    private readonly FeatureKeyRolePermissionsModel _initialModel = new FeatureKeyRolePermissionsModel
+    private FeatureKeyRolePermissionsModel? _initialModel;
+
+    [Inject]
+    private IAccessControlClient ApiClient { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
-        FeatureKey = "",
-        RoleName = "",
-        AllFeatureKeys = AllFeatureKeys,
-        AllRoles = AllRoles,
-    };
+        var roles = await ApiClient.GetAllRoles();
+        _allRoles = [.. roles.Select(r => r.Name)];
+        _initialModel = new FeatureKeyRolePermissionsModel
+        {
+            FeatureKey = "",
+            RoleName = "",
+            AllFeatureKeys = AllFeatureKeys,
+            AllRoles = _allRoles,
+        };
+
+        await base.OnInitializedAsync();
+    }
 
     private async Task OpenDialogAsync()
     {
@@ -83,7 +90,7 @@ public partial class FeatureKeys
             PreventScroll = true
         };
 
-        var dialog = await DialogService.ShowDialogAsync<FeatureKeysDialog>(_initialModel, parameters);
+        var dialog = await DialogService.ShowDialogAsync<FeatureKeysDialog>(_initialModel!, parameters);
         var result = await dialog.Result;
 
         if (result.Cancelled)
@@ -194,7 +201,6 @@ public partial class FeatureKeys
 
         ToastService.ShowSuccess("All cahnges saved!");
     }
-
 
     private void HandleRowClick(FluentDataGridRow<FeatureKeyRolePermissionsModel> row)
     {

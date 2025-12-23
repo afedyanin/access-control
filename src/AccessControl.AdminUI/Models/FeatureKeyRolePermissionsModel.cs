@@ -16,7 +16,7 @@ public class FeatureKeyRolePermissionsModel
 
     public List<string> AllFeatureKeys { get; set; } = [];
 
-    public List<string> AllRoles { get; set; } = [];
+    public string[] AllRoles { get; set; } = [];
 
     public IEnumerable<string>? SelectedRoles { get; set; } = [];
 }
