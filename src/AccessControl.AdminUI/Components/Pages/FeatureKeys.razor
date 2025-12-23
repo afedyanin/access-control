@@ -29,7 +29,6 @@
                         AutoFit="true"
                         Items=_rowsGrid.AsQueryable()
                         TGridItem=FeatureKeyRolePermissionsModel
-                        OnCellClick="HandleCellClick"
                         RowSize="@DataGridRowSize.Medium">
             <PropertyColumn Property="@(p => p.FeatureKey)" Title="Feature Key" Sortable="true" />
             <PropertyColumn Property="@(p => p.RoleName)" Title="Role name" Sortable="true" />

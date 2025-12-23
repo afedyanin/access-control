@@ -55,7 +55,12 @@ public class FeatureKeyChangeTracker
             return false;
         }
 
-        if (!rolePermissions.ContainsKey(roleName))
+        if (!rolePermissions.TryGetValue(roleName, out var sourcePermissions))
+        {
+            return false;
+        }
+
+        if (sourcePermissions == permissions)
         {
             return false;
         }

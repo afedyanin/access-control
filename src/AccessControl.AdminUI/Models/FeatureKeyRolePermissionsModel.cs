@@ -1,3 +1,5 @@
+using AccessControl.Contracts.Entities;
+
 namespace AccessControl.AdminUI.Models;
 
 public record class FeatureKeyRolePermissionsModel
@@ -19,4 +21,31 @@ public record class FeatureKeyRolePermissionsModel
     public string[] AllRoles { get; set; } = [];
 
     public IEnumerable<string>? SelectedRoles { get; set; } = [];
+
+    internal Permissions GetPermissions()
+    {
+        var perm = Permissions.None;
+
+        if (PermissionRead)
+        {
+            perm |= Permissions.Read;
+        }
+
+        if (PermissionWrite)
+        {
+            perm |= Permissions.Write;
+        }
+
+        if (PermissionExecute)
+        {
+            perm |= Permissions.Execute;
+        }
+
+        if (PermissionDelete)
+        {
+            perm |= Permissions.Delete;
+        }
+
+        return perm;
+    }
 }

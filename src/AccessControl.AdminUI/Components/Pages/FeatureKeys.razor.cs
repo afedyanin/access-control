@@ -1,4 +1,3 @@
-using System.Text;
 using AccessControl.AdminUI.Components.Common;
 using AccessControl.AdminUI.Models;
 using AccessControl.Contracts;
@@ -165,30 +164,8 @@ public partial class FeatureKeys
 
     private async Task SubmitChangesAsync()
     {
-        var sb = new StringBuilder();
-
-        var changedKeys = _changeTracker!.GetChangedKeys();
-        if (changedKeys.Any())
-        {
-            sb.AppendLine("<br/>changed:");
-            foreach (var key in changedKeys)
-            {
-                sb.AppendLine($"<br/> - {key.Name}");
-            }
-        }
-
-        var deletedKeys = _changeTracker!.GetDeletedKeys();
-        if (deletedKeys.Any())
-        {
-            sb.AppendLine("<br/>deleted:");
-            foreach (var key in deletedKeys)
-            {
-                sb.AppendLine($"<br/> - {key}");
-            }
-        }
-
         var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Save all changes?{sb}",
+            $"Save all changes?",
             "Yes",
             "No",
             $"Saving permissions");
@@ -198,6 +175,11 @@ public partial class FeatureKeys
         if (result.Cancelled)
         {
             return;
+        }
+
+        foreach (var model in _rowsGrid)
+        {
+            _changeTracker!.TryUpdate(model.FeatureKey, model.RoleName, model.GetPermissions());
         }
 
         var request = new FeatureKeysUpdateRequest
@@ -210,18 +192,6 @@ public partial class FeatureKeys
         await InitModel();
 
         ToastService.ShowSuccess("All cahnges saved!");
-    }
-
-    private void HandleCellClick(FluentDataGridCell<FeatureKeyRolePermissionsModel> cell)
-    {
-        var model = cell.Item;
-
-        if (model != null)
-        {
-            Logger.LogInformation("Model updated: {Model}", model);
-            var permissions = GetPermissions(model);
-            _changeTracker!.TryUpdate(model.FeatureKey, model.RoleName, permissions);
-        }
     }
 
     private static List<FeatureKeyRolePermissionsModel> ToModel(FeatureKey[] keys)
@@ -238,33 +208,6 @@ public partial class FeatureKeys
                  PermissionDelete = role.Permissions.HasFlag(Permissions.Delete),
              });
 
-        return [.. res];
-    }
-
-    private Permissions GetPermissions(FeatureKeyRolePermissionsModel model)
-    {
-        var perm = Permissions.None;
-
-        if (model.PermissionRead)
-        {
-            perm &= Permissions.Read;
-        }
-
-        if (model.PermissionWrite)
-        {
-            perm &= Permissions.Write;
-        }
-
-        if (model.PermissionExecute)
-        {
-            perm &= Permissions.Execute;
-        }
-
-        if (model.PermissionDelete)
-        {
-            perm &= Permissions.Delete;
-        }
-
-        return perm;
+        return [.. res.OrderBy(t => t.FeatureKey).ThenBy(t => t.RoleName)];
     }
 }
