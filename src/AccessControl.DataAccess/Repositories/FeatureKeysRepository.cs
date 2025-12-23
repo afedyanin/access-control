@@ -57,14 +57,14 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
             .ExecuteDeleteAsync();
     }
 
-    public async Task<bool> Update(FeatureKey[] changedKeys, string[] deletedKeys)
+    public async Task<int> Update(FeatureKey[] changedKeys, string[] deletedKeys)
     {
         if (changedKeys.Length <= 0 && deletedKeys.Length <= 0)
         {
-            return true;
+            return 0;
         }
 
-        using var context = await GetDbContext();
+        await using var context = await GetDbContext();
 
         foreach (var featureKey in changedKeys)
         {
@@ -73,11 +73,15 @@ internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
 
         var savedRows = await context.SaveChangesAsync();
 
-        var deletedRows = await context.FeatureKeys
-            .Where(s => deletedKeys.Contains(s.Name))
-            .ExecuteDeleteAsync();
+        var deletedRows = 0;
+        if (deletedKeys.Length > 0)
+        {
+            deletedRows = await context.FeatureKeys
+                .Where(s => deletedKeys.Contains(s.Name))
+                .ExecuteDeleteAsync();
+        }
 
-        return (savedRows > 0) || (deletedRows > 0);
+        return savedRows + deletedRows;
     }
 
     private async Task SaveInternal(FeatureKey featureKey, AccessControlDbContext context)

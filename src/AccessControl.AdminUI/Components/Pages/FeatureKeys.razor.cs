@@ -1,6 +1,9 @@
+using System.Text;
 using AccessControl.AdminUI.Components.Common;
 using AccessControl.AdminUI.Models;
 using AccessControl.Contracts;
+using AccessControl.Contracts.Entities;
+using AccessControl.Contracts.Reqests;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 
@@ -8,72 +11,41 @@ namespace AccessControl.AdminUI.Components.Pages;
 
 public partial class FeatureKeys
 {
-    private static readonly List<string> AllFeatureKeys =
-    [
-        "FK 001",
-        "FK 002",
-        "FK 003",
-        "FK 004",
-    ];
-
+    private List<string> _allFeatureKeyNames = [];
     private string[] _allRoles = [];
-
-    private readonly List<FeatureKeyRolePermissionsModel> _rowsGrid = new()
-    {
-        new FeatureKeyRolePermissionsModel
-        {
-            FeatureKey = "Feature Key001",
-            RoleName = "Some Role 01",
-            PermissionRead = true,
-            PermissionWrite = true,
-        },
-
-        new FeatureKeyRolePermissionsModel
-        {
-            FeatureKey = "Feature Key001",
-            RoleName = "Some Role 02",
-            PermissionRead = true,
-            PermissionWrite = false,
-        },
-
-        new FeatureKeyRolePermissionsModel
-        {
-            FeatureKey = "Feature Key002",
-            RoleName = "Some Role 01",
-            PermissionRead = true,
-            PermissionWrite = true,
-            PermissionExecute = true,
-            PermissionDelete = true,
-        },
-
-        new FeatureKeyRolePermissionsModel
-        {
-            FeatureKey = "Feature Key002",
-            RoleName = "Some Role 03",
-            PermissionRead = true,
-            PermissionExecute = true,
-        },
-    };
-
-
+    private List<FeatureKeyRolePermissionsModel> _rowsGrid = [];
     private FeatureKeyRolePermissionsModel? _initialModel;
+
+    private FeatureKeyChangeTracker? _changeTracker;
 
     [Inject]
     private IAccessControlClient ApiClient { get; set; } = default!;
 
+    [Inject]
+    private ILogger<FeatureKeys> Logger { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
+    {
+        await InitModel();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task InitModel()
     {
         var roles = await ApiClient.GetAllRoles();
         _allRoles = [.. roles.Select(r => r.Name)];
+
+        var allKeys = await ApiClient.GetAllFeatureKeys();
+        _allFeatureKeyNames = [.. allKeys.Select(x => x.Name)];
+        _rowsGrid = ToModel(allKeys);
+        _changeTracker = new FeatureKeyChangeTracker(allKeys);
         _initialModel = new FeatureKeyRolePermissionsModel
         {
             FeatureKey = "",
             RoleName = "",
-            AllFeatureKeys = AllFeatureKeys,
+            AllFeatureKeys = _allFeatureKeyNames,
             AllRoles = _allRoles,
         };
-
-        await base.OnInitializedAsync();
     }
 
     private async Task OpenDialogAsync()
@@ -117,18 +89,21 @@ public partial class FeatureKeys
 
         foreach (var role in model.SelectedRoles ?? [])
         {
-            _rowsGrid.Add(new FeatureKeyRolePermissionsModel
+            if (_changeTracker!.TryAdd(model.FeatureKey, role, Permissions.None))
             {
-                FeatureKey = model.FeatureKey,
-                RoleName = role
-            });
+                _rowsGrid.Add(new FeatureKeyRolePermissionsModel
+                {
+                    FeatureKey = model.FeatureKey,
+                    RoleName = role
+                });
 
-            saved = true;
+                saved = true;
+            }
         }
 
-        if (AllFeatureKeys.FirstOrDefault(fk => fk == model.FeatureKey) == null)
+        if (_allFeatureKeyNames.FirstOrDefault(fk => fk == model.FeatureKey) == null)
         {
-            AllFeatureKeys.Add(model.FeatureKey);
+            _allFeatureKeyNames.Add(model.FeatureKey);
         }
 
         if (saved)
@@ -157,6 +132,7 @@ public partial class FeatureKeys
             return;
         }
 
+        await InitModel();
         ToastService.ShowSuccess("All changes discarded!");
     }
 
@@ -179,15 +155,40 @@ public partial class FeatureKeys
 
         if (found != null)
         {
-            _rowsGrid.Remove(found);
-            ToastService.ShowWarning($"{model.FeatureKey}:{model.RoleName} deleted!");
+            if (_changeTracker!.TryDelete(found.FeatureKey, found.RoleName))
+            {
+                _rowsGrid.Remove(found);
+                ToastService.ShowWarning($"{model.FeatureKey}:{model.RoleName} deleted!");
+            }
         }
     }
 
     private async Task SubmitChangesAsync()
     {
+        var sb = new StringBuilder();
+
+        var changedKeys = _changeTracker!.GetChangedKeys();
+        if (changedKeys.Any())
+        {
+            sb.AppendLine("<br/>changed:");
+            foreach (var key in changedKeys)
+            {
+                sb.AppendLine($"<br/> - {key.Name}");
+            }
+        }
+
+        var deletedKeys = _changeTracker!.GetDeletedKeys();
+        if (deletedKeys.Any())
+        {
+            sb.AppendLine("<br/>deleted:");
+            foreach (var key in deletedKeys)
+            {
+                sb.AppendLine($"<br/> - {key}");
+            }
+        }
+
         var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Save all changes?",
+            $"Save all changes?{sb}",
             "Yes",
             "No",
             $"Saving permissions");
@@ -199,26 +200,71 @@ public partial class FeatureKeys
             return;
         }
 
+        var request = new FeatureKeysUpdateRequest
+        {
+            ChangedKeys = [.. _changeTracker!.GetChangedKeys()],
+            DeletedKeys = [.. _changeTracker!.GetDeletedKeys()],
+        };
+
+        await ApiClient.Update(request);
+        await InitModel();
+
         ToastService.ShowSuccess("All cahnges saved!");
-    }
-
-    private void HandleRowClick(FluentDataGridRow<FeatureKeyRolePermissionsModel> row)
-    {
-        // DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
-    }
-
-    private void HandleRowFocus(FluentDataGridRow<FeatureKeyRolePermissionsModel> row)
-    {
-        // DemoLogger.WriteLine($"Row focused: {row.RowIndex}");
     }
 
     private void HandleCellClick(FluentDataGridCell<FeatureKeyRolePermissionsModel> cell)
     {
-        // DemoLogger.WriteLine($"Cell clicked: {cell.GridColumn}");
+        var model = cell.Item;
+
+        if (model != null)
+        {
+            Logger.LogInformation("Model updated: {Model}", model);
+            var permissions = GetPermissions(model);
+            _changeTracker!.TryUpdate(model.FeatureKey, model.RoleName, permissions);
+        }
     }
 
-    private void HandleCellFocus(FluentDataGridCell<FeatureKeyRolePermissionsModel> cell)
+    private static List<FeatureKeyRolePermissionsModel> ToModel(FeatureKey[] keys)
     {
-        // DemoLogger.WriteLine($"Cell focused : {cell.GridColumn}");
+        var res = keys.SelectMany(key => key.RolePermissions,
+            (key, role) =>
+             new FeatureKeyRolePermissionsModel
+             {
+                 FeatureKey = key.Name,
+                 RoleName = role.RoleName,
+                 PermissionRead = role.Permissions.HasFlag(Permissions.Read),
+                 PermissionWrite = role.Permissions.HasFlag(Permissions.Write),
+                 PermissionExecute = role.Permissions.HasFlag(Permissions.Execute),
+                 PermissionDelete = role.Permissions.HasFlag(Permissions.Delete),
+             });
+
+        return [.. res];
+    }
+
+    private Permissions GetPermissions(FeatureKeyRolePermissionsModel model)
+    {
+        var perm = Permissions.None;
+
+        if (model.PermissionRead)
+        {
+            perm &= Permissions.Read;
+        }
+
+        if (model.PermissionWrite)
+        {
+            perm &= Permissions.Write;
+        }
+
+        if (model.PermissionExecute)
+        {
+            perm &= Permissions.Execute;
+        }
+
+        if (model.PermissionDelete)
+        {
+            perm &= Permissions.Delete;
+        }
+
+        return perm;
     }
 }

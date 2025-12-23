@@ -47,7 +47,7 @@ public interface IAccessControlClient
     public Task<FeatureKey> CreateFeatureKey(FeatureKey featureKey);
 
     [Put("/api/feature-keys")]
-    public Task<FeatureKey> Update(FeatureKeysUpdateRequest request);
+    public Task Update(FeatureKeysUpdateRequest request);
 
     [Delete("/api/feature-keys/{name}")]
     public Task<int> DeleteFeatureKey(string name);

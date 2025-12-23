@@ -3,6 +3,7 @@ using AccessControl.Contracts.Repositories;
 using AccessControl.Contracts.Reqests;
 using AccessControl.WebApi.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace AccessControl.WebApi;
 
@@ -14,10 +15,14 @@ namespace AccessControl.WebApi;
 public class FeatureKeysController : ControllerBase
 {
     private readonly IFeatureKeysRepository _featureKeyRepository;
+    private readonly ILogger<FeatureKeysController> _logger;
 
-    public FeatureKeysController(IFeatureKeysRepository featureKeyRepository)
+    public FeatureKeysController(
+        IFeatureKeysRepository featureKeyRepository,
+        ILogger<FeatureKeysController> logger)
     {
         _featureKeyRepository = featureKeyRepository;
+        _logger = logger;
     }
 
     [HttpPost()]
@@ -43,12 +48,14 @@ public class FeatureKeysController : ControllerBase
     [HttpPut()]
     public async Task<IActionResult> Update(FeatureKeysUpdateRequest request)
     {
-        var saved = await _featureKeyRepository.Update(request.ChangedKeys, request.DeletedKeys);
+        var updatedRows = await _featureKeyRepository.Update(request.ChangedKeys, request.DeletedKeys);
 
-        if (!saved)
-        {
-            return BadRequest($"Cannot save FeatureKeysUpdateRequest={request}");
-        }
+        _logger.LogWarning("{UpdatedRows} rows updated.", updatedRows);
+
+        //if (!saved)
+        //{
+        //    return BadRequest($"Cannot save FeatureKeysUpdateRequest={request}");
+        //}
 
         return Ok();
     }

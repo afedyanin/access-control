@@ -6,6 +6,7 @@ https://duendesoftware.com/blog/20251126-securing-openapi-and-swagger-ui-with-oa
 
 https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/HEAD/docs/configure-and-customize-swaggergen.md#add-security-definitions-and-requirements
 
+- по событию клика на чекбокс не обновляется модель
 
 
 ### 2025-12-22

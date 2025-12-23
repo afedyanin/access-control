@@ -1,6 +1,6 @@
 namespace AccessControl.AdminUI.Models;
 
-public class FeatureKeyRolePermissionsModel
+public record class FeatureKeyRolePermissionsModel
 {
     public required string FeatureKey { get; set; }
 
