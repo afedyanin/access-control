@@ -6,7 +6,7 @@ namespace AccessControl.DataAccess.Tests;
 
 internal class RepositoryTestBase
 {
-    private static readonly string LocalConnection = "Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=access_control;Include Error Detail=True";
+    private const string LocalConnection = "Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=access_control;Include Error Detail=True";
 
     private readonly IServiceProvider _serviceProvider;
 

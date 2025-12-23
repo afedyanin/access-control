@@ -1,5 +1,13 @@
 ## TODO
 
+### 2025-12-23
+
+https://duendesoftware.com/blog/20251126-securing-openapi-and-swagger-ui-with-oauth-in-dotnet-10
+
+https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/HEAD/docs/configure-and-customize-swaggergen.md#add-security-definitions-and-requirements
+
+
+
 ### 2025-12-22
 
 - на странице 

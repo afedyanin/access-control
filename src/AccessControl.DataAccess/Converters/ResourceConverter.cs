@@ -2,6 +2,7 @@ using AccessControl.Contracts.Entities;
 using AccessControl.DataAccess.Dbos;
 
 namespace AccessControl.DataAccess.Converters;
+
 internal static class ResourceConverter
 {
     public static Resource[] ToEntity(this IEnumerable<ResourceDbo> resources)

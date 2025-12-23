@@ -5,7 +5,7 @@ namespace AccessControl.AdminUI.Tests;
 
 public class FeatureKeyChangeTrackerTests
 {
-    private static readonly FeatureKey[] _allKeys =
+    private static readonly FeatureKey[] AllKeys =
     [
         new FeatureKey
         {
@@ -46,7 +46,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanCreateChangeTracker()
     {
-        var dict = FeatureKeyChangeTracker.CreateStructuredPermissions(_allKeys);
+        var dict = FeatureKeyChangeTracker.CreateStructuredPermissions(AllKeys);
         Assert.Multiple(() =>
         {
             Assert.That(dict.ContainsKey("fk01"), Is.True);
@@ -61,7 +61,7 @@ public class FeatureKeyChangeTrackerTests
     [TestCase("fk02", "role01", Permissions.None, true)]
     public void CanAddNewKey(string featureKey, string role, Permissions permission, bool expected)
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         var res = tracker.TryAdd(featureKey, role, permission);
         Assert.That(res, Is.EqualTo(expected));
@@ -72,7 +72,7 @@ public class FeatureKeyChangeTrackerTests
     [TestCase("fk02", "role01", Permissions.None, false)]
     public void CanUpdateKey(string featureKey, string role, Permissions permission, bool expected)
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         var res = tracker.TryUpdate(featureKey, role, permission);
         Assert.That(res, Is.EqualTo(expected));
@@ -83,7 +83,7 @@ public class FeatureKeyChangeTrackerTests
     [TestCase("fk02", "role01", false)]
     public void CanDeleteKey(string featureKey, string role, bool expected)
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         var res = tracker.TryDelete(featureKey, role);
         Assert.That(res, Is.EqualTo(expected));
@@ -92,7 +92,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterAdd()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryAdd("FK_new", "role01", Permissions.Read); // true
         tracker.TryAdd("fk02", "role02", Permissions.Execute); // false
@@ -126,7 +126,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterUpdate()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryUpdate("FK_new", "role01", Permissions.Read); // false
         tracker.TryUpdate("fk02", "role02", Permissions.Execute); // true
@@ -154,7 +154,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterAddAndUpdate()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryAdd("FK_new", "role01", Permissions.Read); // true
         tracker.TryUpdate("FK_new", "role01", Permissions.Execute | Permissions.Write); // true
@@ -171,7 +171,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterUpdateAndAdd()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryUpdate("FK_new", "role01", Permissions.Execute | Permissions.Write); // false
         tracker.TryAdd("FK_new", "role01", Permissions.Read); // true
@@ -188,7 +188,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterAddAndDelete()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryAdd("FK_new", "role01", Permissions.Execute | Permissions.Write); // true
         tracker.TryDelete("FK_new", "role01"); // true
@@ -205,7 +205,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterAddAndDelete2()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryAdd("FK_new", "role01", Permissions.Execute | Permissions.Write); // true
         tracker.TryAdd("FK_new", "role02", Permissions.Read); // true
@@ -223,7 +223,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterAddAndDeleteAndAdd()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryAdd("FK_new", "role01", Permissions.Execute | Permissions.Write); // true
         tracker.TryDelete("FK_new", "role01"); // true
@@ -241,7 +241,7 @@ public class FeatureKeyChangeTrackerTests
     [Test]
     public void CanGetTrackedItemsAfterUpdateAndDeleteAndAdd()
     {
-        var tracker = new FeatureKeyChangeTracker(_allKeys);
+        var tracker = new FeatureKeyChangeTracker(AllKeys);
 
         tracker.TryUpdate("fk02", "role02", Permissions.Execute); // true
         tracker.TryDelete("fk02", "role01"); // true

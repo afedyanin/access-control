@@ -1,6 +1,7 @@
 using AccessControl.Contracts.Entities;
 
 namespace AccessControl.Contracts.Extensions;
+
 public static class FeatureKeyExtensions
 {
     public static Permissions GetEffectivePermissions(this FeatureKey fetaureKey, string[] roleNames)

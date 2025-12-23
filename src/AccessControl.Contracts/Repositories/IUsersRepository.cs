@@ -1,6 +1,7 @@
 using AccessControl.Contracts.Entities;
 
 namespace AccessControl.Contracts.Repositories;
+
 public interface IUsersRepository
 {
     public Task<User[]> GetAll();

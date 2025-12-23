@@ -3,7 +3,7 @@ using AccessControl.Contracts.Entities;
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-internal class RolesRepositoryTests : RepositoryTestBase
+internal sealed class RolesRepositoryTests : RepositoryTestBase
 {
     [TestCase("Admin")]
     [TestCase("Developer")]
@@ -52,7 +52,7 @@ internal class RolesRepositoryTests : RepositoryTestBase
             Name = "Some Role to delete",
         };
 
-        var saved = await RolesRepository.Save(role);
+        _ = await RolesRepository.Save(role);
         var deleted = await RolesRepository.Delete(role.Name);
 
         Assert.That(deleted, Is.GreaterThan(0));

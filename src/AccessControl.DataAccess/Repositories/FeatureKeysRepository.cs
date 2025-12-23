@@ -5,6 +5,7 @@ using AccessControl.DataAccess.Dbos;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessControl.DataAccess.Repositories;
+
 internal class FeatureKeysRepository : RepositoryBase, IFeatureKeysRepository
 {
     public FeatureKeysRepository(IDbContextFactory<AccessControlDbContext> contextFactory) : base(contextFactory)

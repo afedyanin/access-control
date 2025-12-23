@@ -9,5 +9,4 @@ internal class UserRoleDbo
     public string RoleName { get; set; } = string.Empty;
 
     public required RoleDbo Role { get; set; }
-
 }

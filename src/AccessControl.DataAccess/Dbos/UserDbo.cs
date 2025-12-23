@@ -1,4 +1,5 @@
 namespace AccessControl.DataAccess.Dbos;
+
 internal class UserDbo
 {
     public required string Name { get; set; }

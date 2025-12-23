@@ -3,7 +3,7 @@ using AccessControl.Contracts.Entities;
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-internal class FeatureKeysRepositoryTests : RepositoryTestBase
+internal sealed class FeatureKeysRepositoryTests : RepositoryTestBase
 {
     [Test]
     public async Task CanSaveFeatureKeyWithoutPermissions()
@@ -50,7 +50,7 @@ internal class FeatureKeysRepositoryTests : RepositoryTestBase
             Name = "Some FK to delete",
         };
 
-        var saved = await FeatureKeysRepository.Save(fk);
+        _ = await FeatureKeysRepository.Save(fk);
         var deleted = await FeatureKeysRepository.Delete(fk.Name);
 
         Assert.That(deleted, Is.GreaterThan(0));

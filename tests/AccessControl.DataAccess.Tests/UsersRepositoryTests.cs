@@ -3,7 +3,7 @@ using AccessControl.Contracts.Entities;
 namespace AccessControl.DataAccess.Tests;
 
 [TestFixture(Category = "Database", Explicit = true)]
-internal class UsersRepositoryTests : RepositoryTestBase
+internal sealed class UsersRepositoryTests : RepositoryTestBase
 {
     [Test]
     public async Task CanSaveUserWithoutRoles()
@@ -44,6 +44,7 @@ internal class UsersRepositoryTests : RepositoryTestBase
             {
                 continue;
             }
+
             Assert.That(savedUser.Roles, Does.Contain(role));
         }
     }

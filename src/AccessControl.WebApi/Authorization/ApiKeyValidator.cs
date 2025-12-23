@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 
 namespace AccessControl.WebApi.Authorization;
+
 public class ApiKeyValidator : IApiKeyValidator
 {
     private readonly IConfiguration _configuration;

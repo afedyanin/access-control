@@ -126,7 +126,7 @@ public class FeatureKeyChangeTracker
     // TODO: call delete API
     public IEnumerable<string> GetDeletedKeys()
     {
-        return _deletedKeys.Where(key => !_keysDict.Keys.Contains(key));
+        return _deletedKeys.Where(key => !_keysDict.ContainsKey(key));
     }
 
     internal static Dictionary<string, Dictionary<string, Permissions>> CreateStructuredPermissions(FeatureKey[] allKeys)

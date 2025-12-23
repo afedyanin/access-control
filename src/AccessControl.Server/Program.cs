@@ -2,11 +2,11 @@ using System.Text.Json.Serialization;
 using AccessControl.DataAccess;
 using AccessControl.WebApi;
 using AccessControl.WebApi.Authorization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace AccessControl.Server;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {
@@ -39,22 +39,9 @@ public class Program
                 Scheme = "ApiKeyScheme"
             });
 
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
             {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "ApiKey"
-                        },
-                        Scheme = "oauth2",
-                        Name = "ApiKey",
-                        In = ParameterLocation.Header,
-                    },
-                    new List<string>()
-                }
+                [new OpenApiSecuritySchemeReference("ApiKey", document)] = []
             });
         });
 

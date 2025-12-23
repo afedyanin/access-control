@@ -18,5 +18,4 @@ public static class DataAccessRegistrar
 
         return services;
     }
-
 }

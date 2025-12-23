@@ -6,7 +6,7 @@ namespace AccessControl.AdminUI.Components.Pages;
 
 public partial class FeatureKeys
 {
-    private static List<string> _allFeatureKeys =
+    private static readonly List<string> AllFeatureKeys =
     [
         "FK 001",
         "FK 002",
@@ -14,7 +14,7 @@ public partial class FeatureKeys
         "FK 004",
     ];
 
-    private static List<string> _allRoles =
+    private static readonly List<string> AllRoles =
     [
         "Role 001",
         "Role 002",
@@ -23,7 +23,7 @@ public partial class FeatureKeys
     ];
 
 
-    List<FeatureKeyRolePermissionsModel> RowsGrid = new()
+    private readonly List<FeatureKeyRolePermissionsModel> _rowsGrid = new()
     {
         new FeatureKeyRolePermissionsModel
         {
@@ -61,12 +61,12 @@ public partial class FeatureKeys
     };
 
 
-    private FeatureKeyRolePermissionsModel _initialModel = new FeatureKeyRolePermissionsModel
+    private readonly FeatureKeyRolePermissionsModel _initialModel = new FeatureKeyRolePermissionsModel
     {
         FeatureKey = "",
         RoleName = "",
-        AllFeatureKeys = _allFeatureKeys,
-        AllRoles = _allRoles,
+        AllFeatureKeys = AllFeatureKeys,
+        AllRoles = AllRoles,
     };
 
     private async Task OpenDialogAsync()
@@ -110,7 +110,7 @@ public partial class FeatureKeys
 
         foreach (var role in model.SelectedRoles ?? [])
         {
-            RowsGrid.Add(new FeatureKeyRolePermissionsModel
+            _rowsGrid.Add(new FeatureKeyRolePermissionsModel
             {
                 FeatureKey = model.FeatureKey,
                 RoleName = role
@@ -119,9 +119,9 @@ public partial class FeatureKeys
             saved = true;
         }
 
-        if (_allFeatureKeys.FirstOrDefault(fk => fk == model.FeatureKey) == null)
+        if (AllFeatureKeys.FirstOrDefault(fk => fk == model.FeatureKey) == null)
         {
-            _allFeatureKeys.Add(model.FeatureKey);
+            AllFeatureKeys.Add(model.FeatureKey);
         }
 
         if (saved)
@@ -168,11 +168,11 @@ public partial class FeatureKeys
             return;
         }
 
-        var found = RowsGrid.FirstOrDefault(r => r.FeatureKey == model.FeatureKey && r.RoleName == model.RoleName);
+        var found = _rowsGrid.FirstOrDefault(r => r.FeatureKey == model.FeatureKey && r.RoleName == model.RoleName);
 
         if (found != null)
         {
-            RowsGrid.Remove(found);
+            _rowsGrid.Remove(found);
             ToastService.ShowWarning($"{model.FeatureKey}:{model.RoleName} deleted!");
         }
     }

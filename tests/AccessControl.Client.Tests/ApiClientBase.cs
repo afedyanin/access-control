@@ -8,7 +8,8 @@ public abstract class ApiClientBase
 {
     private readonly IServiceProvider _serviceProvider;
 
-    protected readonly IAccessControlClient AdminClient;
+    protected IAccessControlClient AdminClient { get; }
+
     protected ApiClientBase()
     {
         var services = new ServiceCollection();
